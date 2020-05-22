@@ -21,7 +21,7 @@ public class JdbcPhoneDao implements PhoneDao{
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final PhoneRowMapper phoneRowMapper;
 
-    private static final String UPDATE_QUERY = "update phones set " +
+    private static final String UPDATE_QUERY_BY_ID = "update phones set " +
             "brand = :brand, model = :model, price = :price, displaySizeInches = :displaySizeInches, weightGr = :weightGr, lengthMm = :lengthMm, " +
             "widthMm = :widthMm, heightMm = :heightMm, announced = :announced, deviceType = :deviceType, os = :os, displayResolution = :displayResolution, pixelDensity = :pixelDensity, " +
             "displayTechnology = :displayTechnology, backCameraMegapixels = :backCameraMegapixels, frontCameraMegapixels = :frontCameraMegapixels, ramGb = :ramGb, internalStorageGb = :internalStorageGb, " +
@@ -58,7 +58,7 @@ public class JdbcPhoneDao implements PhoneDao{
     }
 
     private void update(Phone phone) {
-        namedParameterJdbcTemplate.update(UPDATE_QUERY, createSqlParameterSource(phone));
+        namedParameterJdbcTemplate.update(UPDATE_QUERY_BY_ID, createSqlParameterSource(phone));
     }
 
     private void insert(Phone phone) {
