@@ -25,7 +25,7 @@
         <constructor-arg name="dataSource" ref="dataSource"/>
     </bean>
 
-    <jdbc:initialize-database enabled="true" data-source="dataSource">
+    <jdbc:initialize-database enabled="${db.insertSchema}" data-source="dataSource">
         <jdbc:script location="classpath:db/schema.sql" />
     </jdbc:initialize-database>
 </beans>

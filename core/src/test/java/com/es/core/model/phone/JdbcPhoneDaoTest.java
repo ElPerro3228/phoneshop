@@ -1,22 +1,30 @@
 package com.es.core.model.phone;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
 
 
-@ContextConfiguration("classpath:context/applicationContext-core-test")
-@RunWith(SpringJUnit4ClassRunner.class)
-public class JdbcPhoneDaoTest {
+public class JdbcPhoneDaoTest extends AbstractTest{
     @Autowired
     private PhoneDao phoneDao;
+
+    @Before
+    public void setup() throws IOException {
+        insertTestData();
+    }
+
+    @After
+    public void finish() throws IOException {
+        clearTables();
+    }
 
     @Test
     public void testFindAll() {
