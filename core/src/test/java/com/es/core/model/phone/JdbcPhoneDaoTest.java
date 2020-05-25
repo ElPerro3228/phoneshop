@@ -1,44 +1,30 @@
 package com.es.core.model.phone;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
-
-public class JdbcPhoneDaoTest extends AbstractTest{
+@Transactional
+public class JdbcPhoneDaoTest extends AbstractTest {
     @Autowired
     private PhoneDao phoneDao;
-
-    @Before
-    public void setup() throws IOException {
-        insertTestData();
-    }
-
-    @After
-    public void finish() throws IOException {
-        clearTables();
-    }
 
     @Test
     public void testFindAll() {
         List<Phone> phones = phoneDao.findAll(0, 10);
-        assertEquals(10, phones.size());
-        for (Phone phone : phones) {
-            assertTrue(phone.getColors().size() > 0);
-        }
+        assertThat(phones).hasSize(10)
+                .allMatch(phone -> phone.getColors().size() > 0);
     }
 
     @Test
     public void shouldGetNotEmptyPhone() {
         Optional<Phone> phone = phoneDao.get(1000L);
-        assertTrue(phone.isPresent());
+        assertThat(phone).isPresent();
     }
 
     @Test
@@ -47,7 +33,7 @@ public class JdbcPhoneDaoTest extends AbstractTest{
         phone.setBrand("");
         phone.setModel("");
         phoneDao.save(phone);
-        assertNotNull(phone.getId());
+        assertThat(phone.getId()).isNotNull();
     }
 
     @Test
@@ -56,6 +42,6 @@ public class JdbcPhoneDaoTest extends AbstractTest{
         phone.setBrand("");
         phoneDao.save(phone);
         phone = phoneDao.get(1000L).get();
-        assertEquals("", phone.getBrand());
+        assertThat(phone.getBrand()).isEqualTo("");
     }
 }
