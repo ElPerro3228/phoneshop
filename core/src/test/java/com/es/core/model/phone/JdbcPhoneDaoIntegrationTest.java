@@ -10,7 +10,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Transactional
-public class JdbcPhoneDaoIntegrationTest extends AbstractTest {
+public class JdbcPhoneDaoIntegrationTest extends AbstractIntegrationTest {
     @Autowired
     private PhoneDao phoneDao;
 

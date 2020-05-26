@@ -9,12 +9,14 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Optional;
 
 @Component
+@Transactional
 public class JdbcPhoneDao implements PhoneDao{
     @Resource
     private JdbcTemplate jdbcTemplate;
