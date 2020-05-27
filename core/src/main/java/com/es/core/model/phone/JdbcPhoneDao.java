@@ -74,6 +74,16 @@ public class JdbcPhoneDao implements PhoneDao{
         return jdbcTemplate.query("select * from phones offset " + offset + " limit " + limit, phoneRowMapper);
     }
 
+    @Override
+    public List<Phone> searchForPhones(int offset, int limit, String searchQuery, SortField sortField, SortOrder sortOrder) {
+        String[] words = searchQuery.split(" ");
+        searchQuery = "";
+        for (String word : words) {
+            searchQuery += "brand like '%" + word + "%' or model like '%" + word + "%' or ";
+        }
+        searchQuery = searchQuery.substring(0, searchQuery.length() - 3);
+        return jdbcTemplate.query("select * from phones where " + searchQuery + " order by " + sortField.getValue() + " " + sortOrder.getValue() + " limit " + limit + " offset " + offset + ";", phoneRowMapper);
+    }
 
     private SqlParameterSource createSqlParameterSource(Phone phone) {
         return new BeanPropertySqlParameterSource(phone);
