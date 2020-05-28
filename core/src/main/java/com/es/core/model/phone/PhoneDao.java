@@ -9,4 +9,5 @@ public interface PhoneDao {
     void save(Phone phone);
     List<Phone> findAll(int offset, int limit);
     List<Phone> searchForPhones(int offset, int limit, String searchQuery, SortField sortField, SortOrder sortOrder);
+    int getPhonesNumber();
 }

@@ -38,6 +38,9 @@ public class JdbcPhoneDao implements PhoneDao{
             ":displayTechnology, :backCameraMegapixels, :frontCameraMegapixels, :ramGb, :internalStorageGb, :batteryCapacityMah, :talkTimeHours, :standByTimeHours, :bluetooth, :positioning," +
             ":imageUrl, :description);";
 
+    private static final String COUNT_PHONES_WITH_NOT_EMPTY_STOCK_AND_PRICE = "select count(*) from phones join stocks on id = phoneId " +
+            "where stock > 0 and price > 0;";
+
     @Autowired
     public JdbcPhoneDao(PhoneRowMapper phoneRowMapper) {
         this.phoneRowMapper = phoneRowMapper;
@@ -76,13 +79,14 @@ public class JdbcPhoneDao implements PhoneDao{
 
     @Override
     public List<Phone> searchForPhones(int offset, int limit, String searchQuery, SortField sortField, SortOrder sortOrder) {
-        String[] words = searchQuery.split(" ");
-        searchQuery = "";
-        for (String word : words) {
-            searchQuery += "brand like '%" + word + "%' or model like '%" + word + "%' or ";
-        }
-        searchQuery = searchQuery.substring(0, searchQuery.length() - 3);
-        return jdbcTemplate.query("select * from phones where " + searchQuery + " order by " + sortField.getValue() + " " + sortOrder.getValue() + " limit " + limit + " offset " + offset + ";", phoneRowMapper);
+        return jdbcTemplate.query("select * from phones " +
+                "join stocks on id = phoneId  where (" + searchQuery + ") and stock > 0 and price > 0" +
+                "order by " + sortField.getValue() + " " + sortOrder.getValue() + " limit " + limit + " offset " + offset + ";", phoneRowMapper);
+    }
+
+    @Override
+    public int getPhonesNumber() {
+        return jdbcTemplate.queryForObject(COUNT_PHONES_WITH_NOT_EMPTY_STOCK_AND_PRICE, Integer.class);
     }
 
     private SqlParameterSource createSqlParameterSource(Phone phone) {

@@ -17,9 +17,10 @@
     </div>
     </form>
     </p>
-    <p>
-        Found <c:out value="${phones.size()}"/> phones.
-    <table border="1px">
+    <p>Found <c:out value="${phones.size()}"/> phones.</p>
+    <p>${pagesNumber}</p>
+    <tags:pageNavigation currentPage="${currentPage}" pagesNumber="${pagesNumber}"/>
+    <table border="1px" class="table">
         <thead>
         <tr>
             <td>Image</td>
