@@ -15,7 +15,7 @@ public class JdbcPhoneService implements PhoneService {
     private static final int LIMIT = 10;
 
     @Resource
-    PhoneDao phoneDao;
+    private PhoneDao phoneDao;
 
     @Override
     public List<Phone> getPhoneList(int page, String query, SortField sortField, SortOrder sortOrder) {

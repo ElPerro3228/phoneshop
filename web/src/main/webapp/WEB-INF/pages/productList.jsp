@@ -47,8 +47,13 @@
                 </td>
                 <td>${phone.displaySizeInches}"</td>
                 <td>$ ${phone.price}</td>
-                <td><input name="quantity" value="1"></td>
-                <td><button type="button" class="btn btn-outline-success">Add to</button></td>
+                <div class="container">
+                    <td><input id="${phone.id}" value="1"></td>
+                    <td>
+                        <button name="add-to-cart" type="button" class="btn btn-outline-success" data-phone-id="${phone.id}">Add to</button>
+                        <div class="error" style="color: red"></div>
+                    </td>
+                </div>
             </tr>
         </c:forEach>
     </table>

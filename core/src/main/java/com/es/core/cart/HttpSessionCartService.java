@@ -1,28 +1,66 @@
 package com.es.core.cart;
 
+import com.es.core.model.phone.Phone;
+import com.es.core.model.phone.PhoneDao;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class HttpSessionCartService implements CartService {
+
+    @Autowired
+    private Cart cart;
+    @Autowired
+    private PhoneDao phoneDao;
+
     @Override
     public Cart getCart() {
-        throw new UnsupportedOperationException("TODO");
+        return cart;
     }
 
     @Override
     public void addPhone(Long phoneId, Long quantity) {
-        throw new UnsupportedOperationException("TODO");
+        Optional<CartItem> optionalCartItem = cart.getCartItems().stream()
+                .filter(cartItem -> cartItem.getPhoneId().equals(phoneId))
+                .findFirst();
+        if (optionalCartItem.isPresent()) {
+            optionalCartItem.get().setQuantity(quantity);
+        } else {
+            cart.getCartItems().add(new CartItem(phoneId, quantity));
+        }
+        cart.setSubTotalPrice(countSubTotalPrice());
     }
 
     @Override
     public void update(Map<Long, Long> items) {
-        throw new UnsupportedOperationException("TODO");
+        for (Long phoneId : items.keySet()) {
+            Long quantity = items.get(phoneId);
+            addPhone(phoneId, quantity);
+        }
+        cart.setSubTotalPrice(countSubTotalPrice());
     }
 
     @Override
     public void remove(Long phoneId) {
-        throw new UnsupportedOperationException("TODO");
+        cart.getCartItems().removeIf(cartItem -> cartItem.getPhoneId().equals(phoneId));
+    }
+
+    @Override
+    public BigDecimal countSubTotalPrice() {
+        double subTotalPrice = 0.0;
+        List<CartItem> cartItems = cart.getCartItems();
+        for (CartItem cartItem : cartItems) {
+            Optional<Phone> phone = phoneDao.get(cartItem.getPhoneId());
+            if (phone.isPresent()) {
+                subTotalPrice += phone.get().getPrice().doubleValue() * cartItem.getQuantity();
+            }
+        }
+        return new BigDecimal(subTotalPrice);
     }
 }
