@@ -9,7 +9,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class HttpSessionCartService implements CartService {
@@ -34,7 +33,7 @@ public class HttpSessionCartService implements CartService {
         } else {
             cart.getCartItems().add(new CartItem(phoneId, quantity));
         }
-        cart.setSubTotalPrice(countSubTotalPrice());
+        cart.setCartPrice(countCartPrice());
     }
 
     @Override
@@ -43,7 +42,6 @@ public class HttpSessionCartService implements CartService {
             Long quantity = items.get(phoneId);
             addPhone(phoneId, quantity);
         }
-        cart.setSubTotalPrice(countSubTotalPrice());
     }
 
     @Override
@@ -52,7 +50,7 @@ public class HttpSessionCartService implements CartService {
     }
 
     @Override
-    public BigDecimal countSubTotalPrice() {
+    public BigDecimal countCartPrice() {
         double subTotalPrice = 0.0;
         List<CartItem> cartItems = cart.getCartItems();
         for (CartItem cartItem : cartItems) {

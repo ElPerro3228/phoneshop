@@ -17,5 +17,5 @@ public interface CartService {
 
     void remove(Long phoneId);
 
-    BigDecimal countSubTotalPrice();
+    BigDecimal countCartPrice();
 }

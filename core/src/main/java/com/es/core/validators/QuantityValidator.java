@@ -9,8 +9,11 @@ import javax.validation.ConstraintValidatorContext;
 
 public class QuantityValidator implements ConstraintValidator<QuantityConstraint, Object> {
 
-    @Autowired
     private StockDao stockDao;
+    @Autowired
+    public void setStockDao(StockDao stockDao) {
+        this.stockDao = stockDao;
+    }
 
     private String quantity;
     private String phoneId;

@@ -31,6 +31,10 @@ public class JdbcPhoneService implements PhoneService {
 
     @Override
     public int getPagesNumber() {
-        return phoneDao.getPhonesNumber() / LIMIT;
+        int pagesNumber = phoneDao.getPhonesNumber() / LIMIT;
+        if ((phoneDao.getPhonesNumber() % LIMIT) != 0) {
+            pagesNumber += 1;
+        }
+        return pagesNumber;
     }
 }

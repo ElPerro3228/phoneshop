@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class AjaxControllerAdvice {
     @ExceptionHandler(CartItemValidationException.class)
-    public ResponseEntity<AjaxError> handleCertItemValidationException(CartItemValidationException exception) {
+    public ResponseEntity<AjaxError> handleCartItemValidationException(CartItemValidationException exception) {
         AjaxError error = new AjaxError(exception.getMessage());
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }

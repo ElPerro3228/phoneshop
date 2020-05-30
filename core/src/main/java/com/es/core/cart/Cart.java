@@ -14,20 +14,20 @@ import java.util.List;
 public class Cart implements Serializable {
 
     private List<CartItem> cartItems;
-    private BigDecimal subTotalPrice;
+    private BigDecimal cartPrice;
 
     public Cart() {
         cartItems = new ArrayList<>();
-        subTotalPrice = new BigDecimal("0.0");
+        cartPrice = new BigDecimal("0.0");
     }
 
     public Cart(List<CartItem> cartItems) {
         this.cartItems = cartItems;
     }
 
-    public Cart(List<CartItem> cartItems, BigDecimal subTotalPrice) {
+    public Cart(List<CartItem> cartItems, BigDecimal cartPrice) {
         this.cartItems = cartItems;
-        this.subTotalPrice = subTotalPrice;
+        this.cartPrice = cartPrice;
     }
 
     public List<CartItem> getCartItems() {
@@ -38,11 +38,11 @@ public class Cart implements Serializable {
         this.cartItems = cartItems;
     }
 
-    public BigDecimal getSubTotalPrice() {
-        return subTotalPrice;
+    public BigDecimal getCartPrice() {
+        return cartPrice;
     }
 
-    public void setSubTotalPrice(BigDecimal subTotalPrice) {
-        this.subTotalPrice = subTotalPrice;
+    public void setCartPrice(BigDecimal cartPrice) {
+        this.cartPrice = cartPrice;
     }
 }

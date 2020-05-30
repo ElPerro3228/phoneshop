@@ -25,7 +25,7 @@ public class AjaxCartController {
     public Cart addPhone(@Valid @RequestBody CartItem cartItem, Errors errors) {
         if (!errors.hasErrors()) {
             cartService.addPhone(cartItem.getPhoneId(), cartItem.getQuantity());
-            return new Cart(cartService.getCart().getCartItems(), cartService.getCart().getSubTotalPrice());
+            return new Cart(cartService.getCart().getCartItems(), cartService.getCart().getCartPrice());
         } else {
             throw new CartItemValidationException(errors.getAllErrors().get(0).getDefaultMessage());
         }

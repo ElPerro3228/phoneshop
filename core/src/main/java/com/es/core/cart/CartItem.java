@@ -1,6 +1,8 @@
 package com.es.core.cart;
 
 import com.es.core.validators.QuantityConstraint;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.validation.constraints.DecimalMin;
 import java.io.Serializable;
@@ -37,5 +39,27 @@ public class CartItem implements Serializable {
 
     public void setQuantity(Long quantity) {
         this.quantity = quantity;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CartItem cartItem = (CartItem) o;
+
+        return new EqualsBuilder()
+                .append(phoneId, cartItem.phoneId)
+                .append(quantity, cartItem.quantity)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(phoneId)
+                .append(quantity)
+                .toHashCode();
     }
 }
