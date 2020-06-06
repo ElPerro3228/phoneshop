@@ -4,6 +4,7 @@ $("button[name='add-to-cart']").click(function(){
     var cartItem = {};
     cartItem["quantity"] = $("#" + phoneId).val();
     cartItem["phoneId"] = phoneId;
+    $this.siblings(".error").text("");
 
     $.ajax({
         type : "POST",
@@ -12,7 +13,7 @@ $("button[name='add-to-cart']").click(function(){
         data : JSON.stringify(cartItem),
         dataType : 'json',
         success : function(data) {
-            $("#cartPrice").text("$ " + data.subTotalPrice);
+            $("#cartPrice").text("items: " + data.quantity + ", price: $ " + data.cartPrice);
         },
         error: function (request, status, error) {
             var e = JSON.parse(request.responseText);

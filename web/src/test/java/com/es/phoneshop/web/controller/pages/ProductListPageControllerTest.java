@@ -1,9 +1,7 @@
 package com.es.phoneshop.web.controller.pages;
 
 import com.es.core.model.phone.Phone;
-import com.es.core.model.phone.SortField;
 import com.es.core.model.phone.SortOrder;
-import com.es.core.services.PhoneService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -32,7 +30,7 @@ public class ProductListPageControllerTest {
     @Test
     public void testShowProductList() throws Exception {
         List<Phone> expectedPhones = createProductList();
-        when(phoneService.getPhoneList(1, "ARCHOS", SortField.PRICE, SortOrder.ASC)).thenReturn(expectedPhones);
+        when(phoneService.getPhoneList(1, "ARCHOS", "price", SortOrder.ASC)).thenReturn(expectedPhones);
 
         MockMvc mockMvc = standaloneSetup(controller).setSingleView(
                 new InternalResourceView("WEB-INF/pages/productLis.jsp")
@@ -41,7 +39,7 @@ public class ProductListPageControllerTest {
         mockMvc.perform(get("/productList")
                 .param("page", "1")
                 .param("query", "ARCHOS")
-                .param("field", "PRICE")
+                .param("field", "price")
                 .param("order", "ASC"))
                 .andExpect(view().name("productList"))
                 .andExpect(model().attributeExists("phones"))

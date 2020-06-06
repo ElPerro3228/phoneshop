@@ -1,6 +1,8 @@
 package com.es.core.model.phone;
 
+import org.springframework.core.env.Environment;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -22,6 +24,8 @@ public class JdbcPhoneDao implements PhoneDao{
     private JdbcTemplate jdbcTemplate;
     @Resource
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    @Autowired
+    private Environment environment;
     private final PhoneRowMapper phoneRowMapper;
 
     private static final String UPDATE_PHONE_BY_ID = "update phones set " +
@@ -78,10 +82,10 @@ public class JdbcPhoneDao implements PhoneDao{
     }
 
     @Override
-    public List<Phone> searchForPhones(int offset, int limit, String searchQuery, SortField sortField, SortOrder sortOrder) {
+    public List<Phone> searchForPhones(int offset, int limit, String searchQuery, String sortField, SortOrder sortOrder) {
         return jdbcTemplate.query("select * from phones " +
                 "join stocks on id = phoneId  where (" + searchQuery + ") and stock > 0 and price > 0" +
-                "order by " + sortField.getValue() + " " + sortOrder.getValue() + " limit " + limit + " offset " + offset + ";", phoneRowMapper);
+                "order by " + environment.getProperty("sortField." + sortField) + " " + sortOrder.getValue() + " limit " + limit + " offset " + offset + ";", phoneRowMapper);
     }
 
     @Override

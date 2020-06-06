@@ -20,7 +20,7 @@ public class ProductListPageController {
     @RequestMapping(method = RequestMethod.GET)
     public String searchProductList(@RequestParam(value = "page", defaultValue = "1") int page,
                                     @RequestParam(value = "query", defaultValue = "") String query,
-                                    @RequestParam(value = "field", defaultValue = "") SortField sortField,
+                                    @RequestParam(value = "field", defaultValue = "") String sortField,
                                     @RequestParam(value = "order", defaultValue = "") SortOrder sortOrder,
                                     Model model) {
         model.addAttribute("phones", phoneService.getPhoneList(page, query, sortField, sortOrder));

@@ -24,11 +24,11 @@
         <thead>
         <tr>
             <td>Image</td>
-            <td>Brand <tags:sortLink field="BRAND" order="ASC"/> <tags:sortLink field="BRAND" order="DESC"/></td>
-            <td>Model <tags:sortLink field="MODEL" order="ASC"/> <tags:sortLink field="MODEL" order="DESC"/></td>
+            <td>Brand <tags:sortLink field="brand" order="ASC"/> <tags:sortLink field="brand" order="DESC"/></td>
+            <td>Model <tags:sortLink field="model" order="ASC"/> <tags:sortLink field="model" order="DESC"/></td>
             <td>Colors</td>
-            <td>Display size <tags:sortLink field="DISPLAY_SIZE_INCHES" order="ASC"/> <tags:sortLink field="DISPLAY_SIZE_INCHES" order="DESC"/></td>
-            <td>Price <tags:sortLink field="PRICE" order="ASC"/> <tags:sortLink field="PRICE" order="DESC"/></td>
+            <td>Display size <tags:sortLink field="displaySizeInches" order="ASC"/> <tags:sortLink field="displaySizeInches" order="DESC"/></td>
+            <td>Price <tags:sortLink field="price" order="ASC"/> <tags:sortLink field="price" order="DESC"/></td>
             <td>Quantity</td>
             <td>Action</td>
         </tr>

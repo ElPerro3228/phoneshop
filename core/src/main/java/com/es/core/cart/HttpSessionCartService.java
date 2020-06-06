@@ -1,12 +1,11 @@
 package com.es.core.cart;
 
-import com.es.core.model.phone.Phone;
-import com.es.core.model.phone.PhoneDao;
+import com.es.core.order.OutOfStockException;
+import com.es.core.services.MiniCartService;
+import com.es.core.validators.QuantityValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -16,7 +15,9 @@ public class HttpSessionCartService implements CartService {
     @Autowired
     private Cart cart;
     @Autowired
-    private PhoneDao phoneDao;
+    private MiniCartService miniCartService;
+    @Autowired
+    private QuantityValidator quantityValidator;
 
     @Override
     public Cart getCart() {
@@ -24,23 +25,23 @@ public class HttpSessionCartService implements CartService {
     }
 
     @Override
-    public void addPhone(Long phoneId, Long quantity) {
-        Optional<CartItem> optionalCartItem = cart.getCartItems().stream()
-                .filter(cartItem -> cartItem.getPhoneId().equals(phoneId))
-                .findFirst();
-        if (optionalCartItem.isPresent()) {
-            optionalCartItem.get().setQuantity(quantity);
-        } else {
-            cart.getCartItems().add(new CartItem(phoneId, quantity));
-        }
-        cart.setCartPrice(countCartPrice());
+    public void addPhone(Long phoneId, Long quantity) throws OutOfStockException {
+        Optional<CartItem> optionalCartItem = findCartItem(phoneId);
+        addOrUpdateCartItem(phoneId, quantity, optionalCartItem);
+    }
+
+    private Optional<CartItem> findCartItem(Long phoneId) {
+        return cart.getCartItems().stream()
+                    .filter(cartItem -> cartItem.getPhoneId().equals(phoneId))
+                    .findFirst();
     }
 
     @Override
-    public void update(Map<Long, Long> items) {
+    public void update(Map<Long, Long> items) throws OutOfStockException {
         for (Long phoneId : items.keySet()) {
             Long quantity = items.get(phoneId);
-            addPhone(phoneId, quantity);
+            Optional<CartItem> optionalCartItem = findCartItem(phoneId);
+            addOrUpdateCartItem(phoneId, quantity, optionalCartItem);
         }
     }
 
@@ -49,16 +50,15 @@ public class HttpSessionCartService implements CartService {
         cart.getCartItems().removeIf(cartItem -> cartItem.getPhoneId().equals(phoneId));
     }
 
-    @Override
-    public BigDecimal countCartPrice() {
-        double subTotalPrice = 0.0;
-        List<CartItem> cartItems = cart.getCartItems();
-        for (CartItem cartItem : cartItems) {
-            Optional<Phone> phone = phoneDao.get(cartItem.getPhoneId());
-            if (phone.isPresent()) {
-                subTotalPrice += phone.get().getPrice().doubleValue() * cartItem.getQuantity();
-            }
+    private void addOrUpdateCartItem(Long phoneId, Long quantity, Optional<CartItem> optionalCartItem) throws OutOfStockException {
+        if (!quantityValidator.isValid(phoneId, quantity)) {
+            throw new OutOfStockException("Invalid quantity");
         }
-        return new BigDecimal(subTotalPrice);
+        if (optionalCartItem.isPresent()) {
+            optionalCartItem.get().setQuantity(quantity);
+        } else {
+            cart.getCartItems().add(new CartItem(phoneId, quantity));
+        }
+        cart.setCartPrice(miniCartService.countCartPrice(cart));
     }
 }

@@ -50,7 +50,7 @@ public class JdbcPhoneDaoIntegrationTest extends AbstractIntegrationTest {
         String searchQuery = "brand like '%ARCHOS%'";
         int limit = 14;
         int offset = 0;
-        List<Phone> phones = phoneDao.searchForPhones(offset, limit, searchQuery, SortField.PRICE, SortOrder.ASC);
+        List<Phone> phones = phoneDao.searchForPhones(offset, limit, searchQuery, "price", SortOrder.ASC);
         assertThat(phones)
                 .hasSize(13)
                 .allMatch(phone -> phone.getPrice().doubleValue() > 0);

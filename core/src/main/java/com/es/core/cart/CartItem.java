@@ -1,18 +1,15 @@
 package com.es.core.cart;
 
-import com.es.core.validators.QuantityConstraint;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Positive;
 import java.io.Serializable;
 
-@QuantityConstraint(
-        phoneId = "phoneId",
-        quantity = "quantity"
-)
 public class CartItem implements Serializable {
 
+    @Positive
     private Long phoneId;
     @DecimalMin(value = "1")
     private Long quantity;
