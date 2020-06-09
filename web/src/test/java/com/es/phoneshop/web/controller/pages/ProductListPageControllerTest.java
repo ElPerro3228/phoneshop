@@ -3,6 +3,7 @@ package com.es.phoneshop.web.controller.pages;
 import com.es.core.model.phone.Phone;
 import com.es.core.model.phone.SortOrder;
 import com.es.core.services.PhoneService;
+import com.es.core.services.ProductPageDataService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -25,7 +26,7 @@ public class ProductListPageControllerTest {
     @Mock
     private PhoneService phoneService;
     @Mock
-    private ProductPageData pageBean;
+    private ProductPageDataService productPageDataService;
     @InjectMocks
     private ProductListPageController controller = new ProductListPageController();
 
@@ -33,6 +34,7 @@ public class ProductListPageControllerTest {
     public void testShowProductList() throws Exception {
         List<Phone> expectedPhones = createProductList();
         when(phoneService.getPhoneList(1, "ARCHOS", "price", SortOrder.ASC)).thenReturn(expectedPhones);
+        when(productPageDataService.getSortFields()).thenReturn(new ArrayList<>());
 
         MockMvc mockMvc = standaloneSetup(controller).setSingleView(
                 new InternalResourceView("WEB-INF/pages/productLis.jsp")
