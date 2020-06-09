@@ -3,6 +3,10 @@
 <%@ tag trimDirectiveWhitespaces="true" %>
 <%@ attribute name="field" required="true" %>
 <%@ attribute name="order" required="true" %>
-<a href="productList?query=${param.query}&field=${field}&order=${order}">
+<a href="<c:url value="/productList">
+            <c:param name="query" value="${param.query}" />
+            <c:param name="sortField" value="${field}" />
+            <c:param name="sortOrder" value="${order}" />
+        </c:url>">
     <i class="${order eq "ASC" ? "fas fa-arrow-up" : "fas fa-arrow-down"}"></i>
 </a>
