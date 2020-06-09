@@ -55,10 +55,18 @@ public class HttpSessionCartService implements CartService {
             throw new OutOfStockException("Invalid quantity");
         }
         if (optionalCartItem.isPresent()) {
-            optionalCartItem.get().setQuantity(quantity);
+            updateExistingItem(optionalCartItem.get(), quantity);
         } else {
-            cart.getCartItems().add(new CartItem(phoneId, quantity));
+            addNewItem(phoneId, quantity);
         }
         cart.setCartPrice(miniCartService.countCartPrice(cart));
+    }
+
+    private void updateExistingItem(CartItem cartItem, Long quantity) {
+        cartItem.setQuantity(quantity);
+    }
+
+    private void addNewItem(Long phoneId, Long quantity) {
+        cart.getCartItems().add(new CartItem(phoneId, quantity));
     }
 }
