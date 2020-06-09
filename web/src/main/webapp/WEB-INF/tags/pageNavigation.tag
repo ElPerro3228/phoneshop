@@ -11,15 +11,15 @@
                 <tags:pageLink productListPage="${currentPage - 1}" text="<<"/>
             </li>
         </c:if>
+
         <li class="page-item"><tags:pageLink productListPage="${currentPage}" text="${currentPage}"/></li>
         <c:if test="${currentPage + 1 <= pagesNumber}">
-            <li class="page-item"><tags:pageLink productListPage="${currentPage + 1}"
-                                                 text="${currentPage + 1}"/></li>
+            <li class="page-item"><tags:pageLink productListPage="${currentPage + 1}" text="${currentPage + 1}"/></li>
         </c:if>
         <c:if test="${currentPage + 2 <= pagesNumber}">
-            <li class="page-item"><tags:pageLink productListPage="${currentPage + 2}"
-                                                 text="${currentPage + 2}"/></li>
+            <li class="page-item"><tags:pageLink productListPage="${currentPage + 2}" text="${currentPage + 2}"/></li>
         </c:if>
+
         <c:if test="${currentPage + 1 < pagesNumber}">
             <li class="page-item">
                 <tags:pageLink productListPage="${currentPage + 1}" text=">>"/>

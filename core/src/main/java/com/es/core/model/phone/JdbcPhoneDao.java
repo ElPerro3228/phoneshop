@@ -83,6 +83,10 @@ public class JdbcPhoneDao implements PhoneDao{
     @Override
     public List<Phone> searchForPhones(int offset, int limit, String searchQuery, String sortField, SortOrder sortOrder,
                                        SqlParameterSource sqlParameterSource) {
+        if ((offset < 0) || (limit < 0) || (searchQuery == null) || (sortField == null) || (sortOrder == null)
+        || (sqlParameterSource == null)) {
+            throw new JdbcPhoneDaoException();
+        }
         return namedParameterJdbcTemplate.query("select * from phones " +
                 "join stocks on id = phoneId  where (" + searchQuery + ") and stock > 0 and price > 0" +
                 "order by " + getSortField(sortField) + " " + sortOrder.getValue() +
