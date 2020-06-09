@@ -3,6 +3,8 @@ package com.es.phoneshop.web.controller;
 import com.es.core.cart.Cart;
 import com.es.core.cart.CartItem;
 import com.es.core.cart.CartService;
+import com.es.core.cart.MiniCart;
+import com.es.core.services.MiniCartService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,12 +13,14 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.validation.Errors;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -25,15 +29,15 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 @RunWith(MockitoJUnitRunner.class)
 public class AjaxCartControllerTest {
     @Mock
-    private CartService cartService;
+    private MiniCartService miniCartService;
     @InjectMocks
     private AjaxCartController controller = new AjaxCartController();
 
     @Test
     public void testAddPhone() throws Exception {
         List<CartItem> cartItems = new ArrayList<>();
-        Cart cart = new Cart(cartItems, new BigDecimal("1"));
-        when(cartService.getCart()).thenReturn(cart);
+        MiniCart miniCart = new MiniCart(1L, new BigDecimal("1"));
+        when(miniCartService.updateCartAndReturnMiniCart(any(CartItem.class))).thenReturn(miniCart);
 
         MockMvc mockMvc = standaloneSetup(controller).build();
         ObjectMapper mapper = new ObjectMapper();
@@ -43,7 +47,8 @@ public class AjaxCartControllerTest {
                 .content(cartItem)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.cartPrice", is(1)));
+                .andExpect(jsonPath("$.cartPrice", is(1)))
+                .andExpect(jsonPath("$.quantity", is(1)));
     }
 
     @Test

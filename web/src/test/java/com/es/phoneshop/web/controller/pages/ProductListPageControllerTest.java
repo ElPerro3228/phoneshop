@@ -2,6 +2,7 @@ package com.es.phoneshop.web.controller.pages;
 
 import com.es.core.model.phone.Phone;
 import com.es.core.model.phone.SortOrder;
+import com.es.core.services.PhoneService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -13,7 +14,6 @@ import org.springframework.web.servlet.view.InternalResourceView;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.hasItems;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
@@ -24,6 +24,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 public class ProductListPageControllerTest {
     @Mock
     private PhoneService phoneService;
+    @Mock
+    private ProductListPageBean pageBean;
     @InjectMocks
     private ProductListPageController controller = new ProductListPageController();
 
@@ -42,8 +44,7 @@ public class ProductListPageControllerTest {
                 .param("field", "price")
                 .param("order", "ASC"))
                 .andExpect(view().name("productList"))
-                .andExpect(model().attributeExists("phones"))
-                .andExpect(model().attribute("phones", hasItems(expectedPhones.toArray())));
+                .andExpect(model().attributeExists("pageBean"));
     }
 
     private List<Phone> createProductList() {

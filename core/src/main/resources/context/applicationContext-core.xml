@@ -28,7 +28,7 @@
         </property>
     </bean>
 
-
+    <bean id = "miniCart" class="com.es.core.cart.MiniCart"></bean>
 
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource"/>

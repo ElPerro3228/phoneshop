@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class ProductListPageController {
     @Autowired
     private PhoneService phoneService;
+    @Autowired
+    private ProductListPageBean pageBean;
 
     @RequestMapping(method = RequestMethod.GET)
     public String searchProductList(@RequestParam(value = "page", defaultValue = "1") int page,
@@ -23,9 +25,10 @@ public class ProductListPageController {
                                     @RequestParam(value = "field", defaultValue = "") String sortField,
                                     @RequestParam(value = "order", defaultValue = "") SortOrder sortOrder,
                                     Model model) {
-        model.addAttribute("phones", phoneService.getPhoneList(page, query, sortField, sortOrder));
-        model.addAttribute("pagesNumber", phoneService.getPagesNumber());
-        model.addAttribute("currentPage", page);
+        pageBean.setPhones(phoneService.getPhoneList(page, query, sortField, sortOrder));
+        pageBean.setPagesNumber(phoneService.getPagesNumber());
+        pageBean.setCurrentPage(page);
+        model.addAttribute("pageBean", pageBean);
         return "productList";
     }
 }

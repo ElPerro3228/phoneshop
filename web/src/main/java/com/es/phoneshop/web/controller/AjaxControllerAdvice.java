@@ -14,4 +14,6 @@ public class AjaxControllerAdvice {
         AjaxError error = new AjaxError(exception.getMessage());
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
+
+
 }

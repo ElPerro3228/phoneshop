@@ -17,9 +17,9 @@
     </div>
     </form>
     </p>
-    <p>Found <c:out value="${phones.size()}"/> phones.</p>
-    <p>${pagesNumber}</p>
-    <tags:pageNavigation currentPage="${currentPage}" pagesNumber="${pagesNumber}"/>
+    <p>Found <c:out value="${pageBean.phones.size()}"/> phones.</p>
+    <p>${pageBean.pagesNumber}</p>
+    <tags:pageNavigation currentPage="${pageBean.currentPage}" pagesNumber="${pageBean.pagesNumber}"/>
     <table border="1px" class="table">
         <thead>
         <tr>
@@ -33,7 +33,7 @@
             <td>Action</td>
         </tr>
         </thead>
-        <c:forEach var="phone" items="${phones}">
+        <c:forEach var="phone" items="${pageBean.phones}">
             <tr>
                 <td>
                     <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}">

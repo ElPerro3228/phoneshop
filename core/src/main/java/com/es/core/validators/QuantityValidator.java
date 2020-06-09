@@ -1,6 +1,5 @@
 package com.es.core.validators;
 
-import com.es.core.cart.CartItem;
 import com.es.core.model.phone.Stock;
 import com.es.core.model.phone.StockDao;
 import org.springframework.beans.factory.annotation.Autowired;

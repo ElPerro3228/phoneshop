@@ -2,10 +2,14 @@ package com.es.core.services;
 
 import com.es.core.cart.Cart;
 import com.es.core.cart.CartItem;
+import com.es.core.cart.CartItemValidationException;
+import com.es.core.cart.CartService;
 import com.es.core.cart.MiniCart;
 import com.es.core.model.phone.PhoneDao;
+import com.es.core.order.OutOfStockException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.Errors;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -13,18 +17,34 @@ import java.util.List;
 @Service
 public class DefaultMiniCartService implements MiniCartService{
 
+    private CartService cartService;
     private PhoneDao phoneDao;
+    private MiniCart miniCart;
+
+    @Autowired
+    public void setMiniCart(MiniCart miniCart) {
+        this.miniCart = miniCart;
+    }
 
     @Autowired
     public void setPhoneDao(PhoneDao phoneDao) {
         this.phoneDao = phoneDao;
     }
 
+    @Autowired
+    public void setCartService(CartService cartService) {
+        this.cartService = cartService;
+    }
+
     @Override
-    public MiniCart createMiniCart(Cart cart) {
-        long quantity = countQuantity(cart);
-        BigDecimal cartPrice = cart.getCartPrice();
-        return new MiniCart(quantity, cartPrice);
+    public MiniCart updateCartAndReturnMiniCart(CartItem cartItem) {
+        try {
+            cartService.addPhone(cartItem.getPhoneId(), cartItem.getQuantity());
+            updateMiniCart(cartService.getCart());
+            return miniCart;
+        } catch (OutOfStockException e) {
+            throw new CartItemValidationException(e.getMessage());
+        }
     }
 
     @Override
@@ -41,5 +61,12 @@ public class DefaultMiniCartService implements MiniCartService{
         return cart.getCartItems().stream()
                 .mapToLong(CartItem::getQuantity)
                 .sum();
+    }
+
+    private void updateMiniCart(Cart cart) {
+        long quantity = countQuantity(cart);
+        BigDecimal cartPrice = cart.getCartPrice();
+        miniCart.setQuantity(quantity);
+        miniCart.setCartPrice(cartPrice);
     }
 }
