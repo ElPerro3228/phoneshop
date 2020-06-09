@@ -2,7 +2,9 @@ package com.es.phoneshop.web.controller;
 
 import com.es.core.cart.CartItem;
 import com.es.core.cart.CartItemValidationException;
+import com.es.core.cart.CartService;
 import com.es.core.cart.MiniCart;
+import com.es.core.order.OutOfStockException;
 import com.es.core.services.MiniCartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,23 +23,17 @@ import javax.validation.Valid;
 public class AjaxCartController {
     @Autowired
     private MiniCartService miniCartService;
+    @Autowired
+    private CartService cartService;
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, produces = "application/json")
-    public MiniCart addPhone(@Valid @RequestBody CartItem cartItem, Errors errors){
+    public MiniCart addPhone(@Valid @RequestBody CartItem cartItem, Errors errors) throws OutOfStockException {
         if (!errors.hasErrors()) {
-            return miniCartService.updateCartAndReturnMiniCart(cartItem);
+            cartService.addPhone(cartItem.getPhoneId(), cartItem.getQuantity());
+            return miniCartService.createMiniCart(cartService.getCart());
         } else {
-            throw new CartItemValidationException(createMessage(errors));
+            throw new CartItemValidationException(errors);
         }
-    }
-
-    private String createMessage(Errors errors) {
-        String message = "";
-        for (ObjectError error : errors.getAllErrors()) {
-            message += error.getDefaultMessage() + ", ";
-        }
-        message = message.substring(0, message.length() - 2);
-        return message;
     }
 }

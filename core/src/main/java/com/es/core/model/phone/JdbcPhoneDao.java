@@ -3,8 +3,10 @@ package com.es.core.model.phone;
 import org.springframework.core.env.Environment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Optional;
+import java.util.Properties;
 
 @Component
 @Transactional
@@ -23,8 +26,9 @@ public class JdbcPhoneDao implements PhoneDao{
     private JdbcTemplate jdbcTemplate;
     @Resource
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    @Autowired
-    private Environment environment;
+    @Resource(name="properties")
+    private Properties properties;
+
     private final PhoneRowMapper phoneRowMapper;
 
     private static final String UPDATE_PHONE_BY_ID = "update phones set " +
@@ -81,12 +85,12 @@ public class JdbcPhoneDao implements PhoneDao{
     }
 
     @Override
-    public List<Phone> searchForPhones(int offset, int limit, String searchQuery, String sortField, SortOrder sortOrder,
-                                       SqlParameterSource sqlParameterSource) {
-        if ((offset < 0) || (limit < 0) || (searchQuery == null) || (sortField == null) || (sortOrder == null)
-        || (sqlParameterSource == null)) {
-            throw new JdbcPhoneDaoException();
+    public List<Phone> searchForPhones(int offset, int limit, String searchQuery, String sortField, SortOrder sortOrder) {
+        if ((offset < 0) || (limit < 0) || (searchQuery == null) || (sortField == null) || (sortOrder == null)) {
+            throw new DataRetrievalFailureException("null parameter");
         }
+        MapSqlParameterSource sqlParameterSource = createMapSqlParameterSource(searchQuery);
+        searchQuery = createSearchQuery(sqlParameterSource.getValues().size());
         return namedParameterJdbcTemplate.query("select * from phones " +
                 "join stocks on id = phoneId  where (" + searchQuery + ") and stock > 0 and price > 0" +
                 "order by " + getSortField(sortField) + " " + sortOrder.getValue() +
@@ -94,7 +98,7 @@ public class JdbcPhoneDao implements PhoneDao{
     }
 
     private String getSortField(String sortField) {
-        return environment.getProperty("sortField." + sortField);
+        return properties.getProperty("sortField." + sortField);
     }
 
     @Override
@@ -104,5 +108,24 @@ public class JdbcPhoneDao implements PhoneDao{
 
     private SqlParameterSource createSqlParameterSource(Phone phone) {
         return new BeanPropertySqlParameterSource(phone);
+    }
+
+
+    private String createSearchQuery(int wordsCount) {
+        String query = "";
+        for (int i = 0; i < wordsCount; i++) {
+            query += "brand like :word" + i + " or model like :word" + i + " or ";
+        }
+        query = query.substring(0, query.length() - 3);
+        return query;
+    }
+
+    private MapSqlParameterSource createMapSqlParameterSource(String query) {
+        String[] words = query.split(" ");
+        MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
+        for (int i = 0; i < words.length; i++) {
+            sqlParameterSource.addValue("word" + i, "%" + words[i] + "%");
+        }
+        return sqlParameterSource;
     }
 }

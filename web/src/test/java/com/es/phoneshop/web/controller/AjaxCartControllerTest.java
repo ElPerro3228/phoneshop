@@ -13,7 +13,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.validation.Errors;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -29,6 +28,8 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 @RunWith(MockitoJUnitRunner.class)
 public class AjaxCartControllerTest {
     @Mock
+    private CartService cartService;
+    @Mock
     private MiniCartService miniCartService;
     @InjectMocks
     private AjaxCartController controller = new AjaxCartController();
@@ -36,8 +37,11 @@ public class AjaxCartControllerTest {
     @Test
     public void testAddPhone() throws Exception {
         List<CartItem> cartItems = new ArrayList<>();
+        Cart cart = new Cart();
+        cart.setCartItems(cartItems);
         MiniCart miniCart = new MiniCart(1L, new BigDecimal("1"));
-        when(miniCartService.updateCartAndReturnMiniCart(any(CartItem.class))).thenReturn(miniCart);
+        when(miniCartService.createMiniCart(any(Cart.class))).thenReturn(miniCart);
+        when(cartService.getCart()).thenReturn(cart);
 
         MockMvc mockMvc = standaloneSetup(controller).build();
         ObjectMapper mapper = new ObjectMapper();

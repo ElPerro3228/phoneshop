@@ -48,12 +48,10 @@ public class JdbcPhoneDaoIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void shouldReturnPhonesWithNotEmptyStockAndPrice() {
-        String searchQuery = "brand like :word0";
-        MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
-        sqlParameterSource.addValue("word0", "%ARCHOS%");
+        String searchQuery = "ARCHOS";
         int limit = 14;
         int offset = 0;
-        List<Phone> phones = phoneDao.searchForPhones(offset, limit, searchQuery, "price", SortOrder.ASC, sqlParameterSource);
+        List<Phone> phones = phoneDao.searchForPhones(offset, limit, searchQuery, "price", SortOrder.ASC);
         assertThat(phones)
                 .hasSize(13)
                 .allMatch(phone -> phone.getPrice().doubleValue() > 0);

@@ -25,7 +25,7 @@ public class ProductListPageControllerTest {
     @Mock
     private PhoneService phoneService;
     @Mock
-    private ProductListPageBean pageBean;
+    private ProductPageData pageBean;
     @InjectMocks
     private ProductListPageController controller = new ProductListPageController();
 

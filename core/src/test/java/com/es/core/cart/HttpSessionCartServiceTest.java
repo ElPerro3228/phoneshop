@@ -2,7 +2,7 @@ package com.es.core.cart;
 
 import com.es.core.model.phone.Phone;
 import com.es.core.order.OutOfStockException;
-import com.es.core.services.MiniCartService;
+import com.es.core.services.CartPriceCalculationService;
 import com.es.core.validators.QuantityValidator;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,7 +28,7 @@ public class HttpSessionCartServiceTest {
     @Mock
     private Cart cart;
     @Mock
-    private MiniCartService miniCartService;
+    private CartPriceCalculationService cartPriceCalculationService;
     @Mock
     private QuantityValidator quantityValidator;
     @InjectMocks
@@ -42,7 +42,7 @@ public class HttpSessionCartServiceTest {
     public void setup() {
         testPhone = new Phone();
         testPhone.setPrice(new BigDecimal("1"));
-        when(miniCartService.countCartPrice(any(Cart.class))).thenReturn(new BigDecimal("2"));
+        when(cartPriceCalculationService.calculateCartPrice(any(Cart.class))).thenReturn(new BigDecimal("2"));
         when(quantityValidator.isValid(anyLong(), anyLong())).thenReturn(true);
     }
 

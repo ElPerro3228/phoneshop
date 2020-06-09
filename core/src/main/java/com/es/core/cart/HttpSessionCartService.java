@@ -1,6 +1,7 @@
 package com.es.core.cart;
 
 import com.es.core.order.OutOfStockException;
+import com.es.core.services.CartPriceCalculationService;
 import com.es.core.services.MiniCartService;
 import com.es.core.validators.QuantityValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ public class HttpSessionCartService implements CartService {
     @Autowired
     private Cart cart;
     @Autowired
-    private MiniCartService miniCartService;
+    private CartPriceCalculationService cartPriceCalculationService;
     @Autowired
     private QuantityValidator quantityValidator;
 
@@ -26,8 +27,7 @@ public class HttpSessionCartService implements CartService {
 
     @Override
     public void addPhone(Long phoneId, Long quantity) throws OutOfStockException {
-        Optional<CartItem> optionalCartItem = findCartItem(phoneId);
-        addOrUpdateCartItem(phoneId, quantity, optionalCartItem);
+        addOrUpdateCartItem(phoneId, quantity);
     }
 
     private Optional<CartItem> findCartItem(Long phoneId) {
@@ -38,10 +38,8 @@ public class HttpSessionCartService implements CartService {
 
     @Override
     public void update(Map<Long, Long> items) throws OutOfStockException {
-        for (Long phoneId : items.keySet()) {
-            Long quantity = items.get(phoneId);
-            Optional<CartItem> optionalCartItem = findCartItem(phoneId);
-            addOrUpdateCartItem(phoneId, quantity, optionalCartItem);
+        for (Map.Entry<Long, Long> entry : items.entrySet()) {
+            addOrUpdateCartItem(entry.getKey(), entry.getValue());
         }
     }
 
@@ -50,7 +48,8 @@ public class HttpSessionCartService implements CartService {
         cart.getCartItems().removeIf(cartItem -> cartItem.getPhoneId().equals(phoneId));
     }
 
-    private void addOrUpdateCartItem(Long phoneId, Long quantity, Optional<CartItem> optionalCartItem) throws OutOfStockException {
+    private void addOrUpdateCartItem(Long phoneId, Long quantity) throws OutOfStockException {
+        Optional<CartItem> optionalCartItem = findCartItem(phoneId);
         if (!quantityValidator.isValid(phoneId, quantity)) {
             throw new OutOfStockException("Invalid quantity");
         }
@@ -59,7 +58,7 @@ public class HttpSessionCartService implements CartService {
         } else {
             addNewItem(phoneId, quantity);
         }
-        cart.setCartPrice(miniCartService.countCartPrice(cart));
+        cart.setCartPrice(cartPriceCalculationService.calculateCartPrice(cart));
     }
 
     private void updateExistingItem(CartItem cartItem, Long quantity) {

@@ -25,11 +25,11 @@
         <thead>
         <tr>
             <td>Image</td>
-            <td>Brand <tags:sortLink field="brand" order="ASC"/> <tags:sortLink field="brand" order="DESC"/></td>
-            <td>Model <tags:sortLink field="model" order="ASC"/> <tags:sortLink field="model" order="DESC"/></td>
+            <td>Brand <tags:sort field="brand" pageBean="${pageBean}"/></td>
+            <td>Model <tags:sort field="model" pageBean="${pageBean}"/></td>
             <td>Colors</td>
-            <td>Display size <tags:sortLink field="displaySizeInches" order="ASC"/> <tags:sortLink field="displaySizeInches" order="DESC"/></td>
-            <td>Price <tags:sortLink field="price" order="ASC"/> <tags:sortLink field="price" order="DESC"/></td>
+            <td>Display size <tags:sort field="displaySizeInches" pageBean="${pageBean}"/></td>
+            <td>Price <tags:sort field="price" pageBean="${pageBean}"/></td>
             <td>Quantity</td>
             <td>Action</td>
         </tr>

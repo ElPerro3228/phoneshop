@@ -1,23 +1,20 @@
 package com.es.phoneshop.web.controller.pages;
 
 import com.es.core.model.phone.Phone;
-import org.springframework.stereotype.Component;
-import org.springframework.web.context.annotation.RequestScope;
 
 import java.util.List;
 
-@Component
-@RequestScope
-public class ProductListPageBean {
+public class ProductPageData {
 
     private List<Phone> phones;
     private int pagesNumber;
     private int currentPage;
+    private List<String> sortFields;
 
-    public ProductListPageBean() {
+    public ProductPageData() {
     }
 
-    public ProductListPageBean(List<Phone> phones, int pagesNumber, int currentPage) {
+    public ProductPageData(List<Phone> phones, int pagesNumber, int currentPage) {
         this.phones = phones;
         this.pagesNumber = pagesNumber;
         this.currentPage = currentPage;
@@ -45,5 +42,13 @@ public class ProductListPageBean {
 
     public void setCurrentPage(int currentPage) {
         this.currentPage = currentPage;
+    }
+
+    public List<String> getSortFields() {
+        return sortFields;
+    }
+
+    public void setSortFields(List<String> sortFields) {
+        this.sortFields = sortFields;
     }
 }

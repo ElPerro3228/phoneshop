@@ -1,8 +1,8 @@
 package com.es.phoneshop.web.controller.pages;
 
-import com.es.core.model.phone.SortField;
 import com.es.core.model.phone.SortOrder;
 import com.es.core.services.PhoneService;
+import com.es.core.services.ProductPageDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,7 +17,7 @@ public class ProductListPageController {
     @Autowired
     private PhoneService phoneService;
     @Autowired
-    private ProductListPageBean pageBean;
+    private ProductPageDataService productPageDataService;
 
     @RequestMapping(method = RequestMethod.GET)
     public String searchProductList(@RequestParam(value = "page", defaultValue = "1") int page,
@@ -25,10 +25,12 @@ public class ProductListPageController {
                                     @RequestParam(value = "field", defaultValue = "") String sortField,
                                     @RequestParam(value = "order", defaultValue = "") SortOrder sortOrder,
                                     Model model) {
-        pageBean.setPhones(phoneService.getPhoneList(page, query, sortField, sortOrder));
-        pageBean.setPagesNumber(phoneService.getPagesNumber());
-        pageBean.setCurrentPage(page);
-        model.addAttribute("pageBean", pageBean);
+        ProductPageData productPageData = new ProductPageData();
+        productPageData.setSortFields(productPageDataService.getSortFields());
+        productPageData.setPhones(phoneService.getPhoneList(page, query, sortField, sortOrder));
+        productPageData.setPagesNumber(phoneService.getPagesNumber());
+        productPageData.setCurrentPage(page);
+        model.addAttribute("pageBean", productPageData);
         return "productList";
     }
 }
