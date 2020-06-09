@@ -2,6 +2,7 @@ package com.es.core.model.phone;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -47,10 +48,12 @@ public class JdbcPhoneDaoIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void shouldReturnPhonesWithNotEmptyStockAndPrice() {
-        String searchQuery = "brand like '%ARCHOS%'";
+        String searchQuery = "brand like :word0";
+        MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
+        sqlParameterSource.addValue("word0", "%ARCHOS%");
         int limit = 14;
         int offset = 0;
-        List<Phone> phones = phoneDao.searchForPhones(offset, limit, searchQuery, "price", SortOrder.ASC);
+        List<Phone> phones = phoneDao.searchForPhones(offset, limit, searchQuery, "price", SortOrder.ASC, sqlParameterSource);
         assertThat(phones)
                 .hasSize(13)
                 .allMatch(phone -> phone.getPrice().doubleValue() > 0);

@@ -2,7 +2,6 @@ package com.es.core.model.phone;
 
 import org.springframework.core.env.Environment;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -82,10 +81,16 @@ public class JdbcPhoneDao implements PhoneDao{
     }
 
     @Override
-    public List<Phone> searchForPhones(int offset, int limit, String searchQuery, String sortField, SortOrder sortOrder) {
-        return jdbcTemplate.query("select * from phones " +
+    public List<Phone> searchForPhones(int offset, int limit, String searchQuery, String sortField, SortOrder sortOrder,
+                                       SqlParameterSource sqlParameterSource) {
+        return namedParameterJdbcTemplate.query("select * from phones " +
                 "join stocks on id = phoneId  where (" + searchQuery + ") and stock > 0 and price > 0" +
-                "order by " + environment.getProperty("sortField." + sortField) + " " + sortOrder.getValue() + " limit " + limit + " offset " + offset + ";", phoneRowMapper);
+                "order by " + getSortField(sortField) + " " + sortOrder.getValue() +
+                " limit " + limit + " offset " + offset + ";", sqlParameterSource , phoneRowMapper);
+    }
+
+    private String getSortField(String sortField) {
+        return environment.getProperty("sortField." + sortField);
     }
 
     @Override

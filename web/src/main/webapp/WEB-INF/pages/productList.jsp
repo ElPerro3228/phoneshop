@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 
 <tags:master pageTitle="Product List">
@@ -18,7 +19,7 @@
     </form>
     </p>
     <p>Found <c:out value="${pageBean.phones.size()}"/> phones.</p>
-    <p>${pageBean.pagesNumber}</p>
+    <p><c:out value="${pageBean.pagesNumber}"/></p>
     <tags:pageNavigation currentPage="${pageBean.currentPage}" pagesNumber="${pageBean.pagesNumber}"/>
     <table border="1px" class="table">
         <thead>
@@ -46,7 +47,7 @@
                     </c:forEach>
                 </td>
                 <td>${phone.displaySizeInches}"</td>
-                <td>$ ${phone.price}</td>
+                <td> <fmt:formatNumber value="${phone.price}" type="currency" currencySymbol="$"/> </td>
                 <div class="container">
                     <td><input id="${phone.id}" value="1"></td>
                     <td>
