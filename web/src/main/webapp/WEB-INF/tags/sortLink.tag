@@ -5,8 +5,8 @@
 <%@ attribute name="order" required="true" %>
 <a href="<c:url value="/productList">
             <c:param name="query" value="${param.query}" />
-            <c:param name="sortField" value="${field}" />
-            <c:param name="sortOrder" value="${order}" />
+            <c:param name="field" value="${field}" />
+            <c:param name="order" value="${order}" />
         </c:url>">
     <i class="${order eq "ASC" ? "fas fa-arrow-up" : "fas fa-arrow-down"}"></i>
 </a>

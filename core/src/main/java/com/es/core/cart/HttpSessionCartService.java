@@ -2,7 +2,6 @@ package com.es.core.cart;
 
 import com.es.core.order.OutOfStockException;
 import com.es.core.services.CartPriceCalculationService;
-import com.es.core.services.MiniCartService;
 import com.es.core.validators.QuantityValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +27,7 @@ public class HttpSessionCartService implements CartService {
     @Override
     public void addPhone(Long phoneId, Long quantity) throws OutOfStockException {
         addOrUpdateCartItem(phoneId, quantity);
+        cart.setCartPrice(cartPriceCalculationService.calculateCartPrice(cart));
     }
 
     private Optional<CartItem> findCartItem(Long phoneId) {
@@ -41,6 +41,7 @@ public class HttpSessionCartService implements CartService {
         for (Map.Entry<Long, Long> entry : items.entrySet()) {
             addOrUpdateCartItem(entry.getKey(), entry.getValue());
         }
+        cart.setCartPrice(cartPriceCalculationService.calculateCartPrice(cart));
     }
 
     @Override
@@ -58,7 +59,6 @@ public class HttpSessionCartService implements CartService {
         } else {
             addNewItem(phoneId, quantity);
         }
-        cart.setCartPrice(cartPriceCalculationService.calculateCartPrice(cart));
     }
 
     private void updateExistingItem(CartItem cartItem, Long quantity) {

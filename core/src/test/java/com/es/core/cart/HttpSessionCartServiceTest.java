@@ -87,7 +87,7 @@ public class HttpSessionCartServiceTest {
 
         cartService.update(items);
 
-        verify(cart, times(2)).setCartPrice(cartPriceCaptor.capture());
+        verify(cart, times(1)).setCartPrice(cartPriceCaptor.capture());
 
         assertThat(cartPriceCaptor.getValue().doubleValue()).isEqualTo(2);
         assertThat(cartItems).hasSize(2);

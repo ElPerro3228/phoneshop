@@ -1,6 +1,6 @@
 package com.es.core.model.phone;
 
-import org.springframework.core.env.Environment;
+import com.es.core.services.PropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataRetrievalFailureException;
@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Optional;
-import java.util.Properties;
 
 @Component
 @Transactional
@@ -26,8 +25,8 @@ public class JdbcPhoneDao implements PhoneDao{
     private JdbcTemplate jdbcTemplate;
     @Resource
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    @Resource(name="properties")
-    private Properties properties;
+    @Autowired
+    private PropertyService propertyService;
 
     private final PhoneRowMapper phoneRowMapper;
 
@@ -98,7 +97,7 @@ public class JdbcPhoneDao implements PhoneDao{
     }
 
     private String getSortField(String sortField) {
-        return properties.getProperty("sortField." + sortField);
+        return propertyService.getProperty("sortField." + sortField);
     }
 
     @Override
