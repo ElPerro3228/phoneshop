@@ -89,7 +89,7 @@ public class JdbcPhoneDao implements PhoneDao{
             throw new DataRetrievalFailureException("null parameter");
         }
         MapSqlParameterSource sqlParameterSource = createMapSqlParameterSource(searchQuery);
-        searchQuery = createSearchQuery(sqlParameterSource.getValues().size());
+        searchQuery = createSearchQuery();
         return namedParameterJdbcTemplate.query("select * from phones " +
                 "join stocks on id = phoneId  where (" + searchQuery + ") and stock > 0 and price > 0" +
                 "order by " + getSortField(sortField) + " " + sortOrder.getValue() +
@@ -110,21 +110,14 @@ public class JdbcPhoneDao implements PhoneDao{
     }
 
 
-    private String createSearchQuery(int wordsCount) {
-        String query = "";
-        for (int i = 0; i < wordsCount; i++) {
-            query += "brand like :word" + i + " or model like :word" + i + " or ";
-        }
-        query = query.substring(0, query.length() - 3);
+    private String createSearchQuery() {
+        String query = "brand like :query or model like :query";
         return query;
     }
 
     private MapSqlParameterSource createMapSqlParameterSource(String query) {
-        String[] words = query.split(" ");
         MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
-        for (int i = 0; i < words.length; i++) {
-            sqlParameterSource.addValue("word" + i, "%" + words[i] + "%");
-        }
+        sqlParameterSource.addValue("query", "%" + query + "%");
         return sqlParameterSource;
     }
 }
