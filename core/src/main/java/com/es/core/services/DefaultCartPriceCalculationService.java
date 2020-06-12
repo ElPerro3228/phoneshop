@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 public class DefaultCartPriceCalculationService implements CartPriceCalculationService{
 
     @Value("${order.deliveryPrice}")
-    private String deliveryPrice;
+    private BigDecimal deliveryPrice;
     @Autowired
     private PhoneDao phoneDao;
 
@@ -20,6 +20,6 @@ public class DefaultCartPriceCalculationService implements CartPriceCalculationS
         BigDecimal cartPrice = cart.getCartItems().stream()
                 .map(cartItem -> phoneDao.get(cartItem.getPhoneId()).get().getPrice().multiply(new BigDecimal(cartItem.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-        return cartPrice.add(new BigDecimal(deliveryPrice));
+        return cartPrice.add(deliveryPrice);
     }
 }

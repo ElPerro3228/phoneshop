@@ -47,6 +47,8 @@ public class JdbcPhoneDao implements PhoneDao{
     private static final String COUNT_PHONES_WITH_NOT_EMPTY_STOCK_AND_PRICE = "select count(*) from phones join stocks on id = phoneId " +
             "where stock > 0 and price > 0;";
 
+    private static final String SEARCH_QUERY = "brand like :query or model like :query";
+
     @Autowired
     public JdbcPhoneDao(PhoneRowMapper phoneRowMapper) {
         this.phoneRowMapper = phoneRowMapper;
@@ -89,9 +91,8 @@ public class JdbcPhoneDao implements PhoneDao{
             throw new DataRetrievalFailureException("null parameter");
         }
         MapSqlParameterSource sqlParameterSource = createMapSqlParameterSource(searchQuery);
-        searchQuery = createSearchQuery();
         return namedParameterJdbcTemplate.query("select * from phones " +
-                "join stocks on id = phoneId  where (" + searchQuery + ") and stock > 0 and price > 0" +
+                "join stocks on id = phoneId  where (" + SEARCH_QUERY + ") and stock > 0 and price > 0" +
                 "order by " + getSortField(sortField) + " " + sortOrder.getValue() +
                 " limit " + limit + " offset " + offset + ";", sqlParameterSource , phoneRowMapper);
     }
@@ -107,12 +108,6 @@ public class JdbcPhoneDao implements PhoneDao{
 
     private SqlParameterSource createSqlParameterSource(Phone phone) {
         return new BeanPropertySqlParameterSource(phone);
-    }
-
-
-    private String createSearchQuery() {
-        String query = "brand like :query or model like :query";
-        return query;
     }
 
     private MapSqlParameterSource createMapSqlParameterSource(String query) {
