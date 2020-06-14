@@ -25,13 +25,24 @@
     <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
         <property name="dataSource" ref="dataSource" />
     </bean>
-
     <bean id="namedJdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
         <constructor-arg name="dataSource" ref="dataSource"/>
     </bean>
 
-    <bean id="beanPropertyRowMapper" class="org.springframework.jdbc.core.BeanPropertyRowMapper">
+    <bean id="phoneBeanPropertyRowMapper" class="org.springframework.jdbc.core.BeanPropertyRowMapper">
         <constructor-arg name="mappedClass" value="com.es.core.model.phone.Color"/>
+    </bean>
+
+    <bean id="stockBeanPropertyRowMapper" class="org.springframework.jdbc.core.BeanPropertyRowMapper">
+        <constructor-arg name="mappedClass" value="com.es.core.model.phone.Stock"/>
+    </bean>
+
+    <bean id="properties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="locations">
+            <list>
+                <value>classpath:conf/application.properties</value>
+            </list>
+        </property>
     </bean>
 
     <jdbc:initialize-database enabled="${db.insertSchema}" data-source="dataSource">

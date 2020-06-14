@@ -1,9 +1,12 @@
 package com.es.core.model.phone;
 
+import com.es.core.services.PropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -22,6 +25,9 @@ public class JdbcPhoneDao implements PhoneDao{
     private JdbcTemplate jdbcTemplate;
     @Resource
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    @Autowired
+    private PropertyService propertyService;
+
     private final PhoneRowMapper phoneRowMapper;
 
     private static final String UPDATE_PHONE_BY_ID = "update phones set " +
@@ -37,6 +43,11 @@ public class JdbcPhoneDao implements PhoneDao{
             "values (:id, :brand, :model, :price, :displaySizeInches, :weightGr, :lengthMm, :widthMm, :heightMm, :announced, :deviceType, :os, :displayResolution, :pixelDensity," +
             ":displayTechnology, :backCameraMegapixels, :frontCameraMegapixels, :ramGb, :internalStorageGb, :batteryCapacityMah, :talkTimeHours, :standByTimeHours, :bluetooth, :positioning," +
             ":imageUrl, :description);";
+
+    private static final String COUNT_PHONES_WITH_NOT_EMPTY_STOCK_AND_PRICE = "select count(*) from phones join stocks on id = phoneId " +
+            "where stock > 0 and price > 0;";
+
+    private static final String SEARCH_QUERY = "brand like :query or model like :query";
 
     @Autowired
     public JdbcPhoneDao(PhoneRowMapper phoneRowMapper) {
@@ -74,8 +85,34 @@ public class JdbcPhoneDao implements PhoneDao{
         return jdbcTemplate.query("select * from phones offset " + offset + " limit " + limit, phoneRowMapper);
     }
 
+    @Override
+    public List<Phone> searchForPhones(int offset, int limit, String searchQuery, String sortField, SortOrder sortOrder) {
+        if ((offset < 0) || (limit < 0) || (searchQuery == null) || (sortField == null) || (sortOrder == null)) {
+            throw new DataRetrievalFailureException("null parameter");
+        }
+        MapSqlParameterSource sqlParameterSource = createMapSqlParameterSource(searchQuery);
+        return namedParameterJdbcTemplate.query("select * from phones " +
+                "join stocks on id = phoneId  where (" + SEARCH_QUERY + ") and stock > 0 and price > 0" +
+                "order by " + getSortField(sortField) + " " + sortOrder.getValue() +
+                " limit " + limit + " offset " + offset + ";", sqlParameterSource , phoneRowMapper);
+    }
+
+    private String getSortField(String sortField) {
+        return propertyService.getProperty("sortField." + sortField);
+    }
+
+    @Override
+    public int getPhonesNumber() {
+        return jdbcTemplate.queryForObject(COUNT_PHONES_WITH_NOT_EMPTY_STOCK_AND_PRICE, Integer.class);
+    }
 
     private SqlParameterSource createSqlParameterSource(Phone phone) {
         return new BeanPropertySqlParameterSource(phone);
+    }
+
+    private MapSqlParameterSource createMapSqlParameterSource(String query) {
+        MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
+        sqlParameterSource.addValue("query", "%" + query + "%");
+        return sqlParameterSource;
     }
 }
