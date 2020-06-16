@@ -32,8 +32,8 @@ public class HttpSessionCartService implements CartService {
 
     private Optional<CartItem> findCartItem(Long phoneId) {
         return cart.getCartItems().stream()
-                    .filter(cartItem -> cartItem.getPhoneId().equals(phoneId))
-                    .findFirst();
+                .filter(cartItem -> cartItem.getPhoneId().equals(phoneId))
+                .findFirst();
     }
 
     @Override
@@ -69,3 +69,4 @@ public class HttpSessionCartService implements CartService {
         cart.getCartItems().add(new CartItem(phoneId, quantity));
     }
 }
+
