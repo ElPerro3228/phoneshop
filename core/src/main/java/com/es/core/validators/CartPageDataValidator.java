@@ -26,13 +26,13 @@ public class CartPageDataValidator implements Validator {
    @Override
    public void validate(Object o, Errors errors) {
       CartPageData cartPageData = (CartPageData) o;
-      List<CartItem> cartItems = cartPageData.getCartItems();
-      for (CartItem cartItem : cartItems) {
-         if (cartItem.getQuantity() < 1) {
-            errors.reject(cartItem.getPhoneId().toString(), "must be more than 1");
+      Map<Long, Long> cartItems = cartPageData.getCartItems();
+      for (Map.Entry<Long, Long> entry : cartItems.entrySet()) {
+         if (entry.getValue() < 1) {
+            errors.rejectValue("cartItems[" + entry.getKey().toString() + "]", "", "must be more than 1");
          }
-         if (!quantityValidator.isValid(cartItem.getPhoneId(), cartItem.getQuantity())) {
-            errors.reject(cartItem.getPhoneId().toString(), "Out of stock");
+         if (!quantityValidator.isValid(entry.getKey(), entry.getValue())) {
+            errors.rejectValue("cartItems[" + entry.getKey().toString() + "]", "", "Out of stock");
          }
       }
    }

@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class HttpSessionCartService implements CartService {
@@ -75,6 +77,14 @@ public class HttpSessionCartService implements CartService {
             cartItems.put(phone, cartItem.getQuantity());
         }
         return cartItems;
+    }
+
+    @Override
+    public List<Phone> getPhones(Cart cart) {
+        List<CartItem> cartItems = cart.getCartItems();
+        return cartItems.stream()
+                .map(cartItem -> phoneService.getPhone(cartItem.getPhoneId()))
+                .collect(Collectors.toList());
     }
 
     private void updateExistingItem(CartItem cartItem, Long quantity) {

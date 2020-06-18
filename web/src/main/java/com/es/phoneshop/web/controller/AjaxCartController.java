@@ -59,19 +59,10 @@ public class AjaxCartController {
             Errors errors) throws OutOfStockException {
         validator.validate(cartPageData, errors);
         if (!errors.hasErrors()) {
-            Map<Long, Long> itemsMap = convertCartItemsListToMap(cartPageData.getCartItems());
-            cartService.update(itemsMap);
+            cartService.update(cartPageData.getCartItems());
             return miniCartService.createMiniCart(cartService.getCart());
         } else {
             throw new CartPageDataValidationException(errors);
         }
-    }
-
-    private Map<Long, Long> convertCartItemsListToMap(List<CartItem> cartItems) {
-        Map<Long, Long> itemsMap = new HashMap<>();
-        for (CartItem cartItem : cartItems) {
-            itemsMap.put(cartItem.getPhoneId(), cartItem.getQuantity());
-        }
-        return itemsMap;
     }
 }

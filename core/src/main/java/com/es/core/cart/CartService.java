@@ -3,6 +3,7 @@ package com.es.core.cart;
 import com.es.core.model.phone.Phone;
 import com.es.core.order.OutOfStockException;
 
+import java.util.List;
 import java.util.Map;
 
 public interface CartService {
@@ -20,4 +21,6 @@ public interface CartService {
     void remove(Long phoneId);
 
     Map<Phone, Long> getCartItems(Cart cart);
+
+    List<Phone> getPhones(Cart cart);
 }
