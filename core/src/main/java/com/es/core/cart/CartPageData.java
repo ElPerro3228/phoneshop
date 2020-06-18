@@ -1,6 +1,5 @@
 package com.es.core.cart;
 
-import com.es.core.validators.CorrectQuantities;
 
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -8,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@CorrectQuantities
 public class CartPageData implements Serializable {
 
     @Size(min = 1)

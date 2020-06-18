@@ -3,34 +3,37 @@ package com.es.core.validators;
 import com.es.core.cart.CartItem;
 import com.es.core.cart.CartPageData;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.List;
 import java.util.Map;
 
-public class CartPageDataValidator implements ConstraintValidator<CorrectQuantities, CartPageData> {
+@Service
+public class CartPageDataValidator implements Validator {
 
    @Autowired
    private QuantityValidator quantityValidator;
 
-   public void initialize(CorrectQuantities constraint) {
+   @Override
+   public boolean supports(Class<?> aClass) {
+      return CartPageData.class.isAssignableFrom(aClass);
    }
 
-   public boolean isValid(CartPageData cartPageData, ConstraintValidatorContext context) {
+   @Override
+   public void validate(Object o, Errors errors) {
+      CartPageData cartPageData = (CartPageData) o;
       List<CartItem> cartItems = cartPageData.getCartItems();
-      Map<Long, String> errorsMap = cartPageData.getErrorsMap();
-      boolean isValid = true;
       for (CartItem cartItem : cartItems) {
          if (cartItem.getQuantity() < 1) {
-            isValid = false;
-            errorsMap.put(cartItem.getPhoneId(), "must be more than 1 ");
+            errors.reject(cartItem.getPhoneId().toString(), "must be more than 1");
          }
          if (!quantityValidator.isValid(cartItem.getPhoneId(), cartItem.getQuantity())) {
-            isValid = false;
-            errorsMap.put(cartItem.getPhoneId(), "invalid quantity ");
+            errors.reject(cartItem.getPhoneId().toString(), "Out of stock");
          }
       }
-      return isValid;
    }
 }

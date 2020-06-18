@@ -1,15 +1,15 @@
 package com.es.core.validators;
 
-import java.util.Map;
+import org.springframework.validation.Errors;
 
 public class CartPageDataValidationException extends RuntimeException{
-    Map<Long, String> errorsMap;
+    Errors errors;
 
-    public CartPageDataValidationException(Map<Long, String> errorsMap) {
-        this.errorsMap = errorsMap;
+    public CartPageDataValidationException(Errors errors) {
+        this.errors = errors;
     }
 
-    public Map<Long, String> getErrorsMap() {
-        return errorsMap;
+    public Errors getErrors() {
+        return errors;
     }
 }

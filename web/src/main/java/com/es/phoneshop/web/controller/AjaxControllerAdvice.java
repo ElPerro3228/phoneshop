@@ -10,10 +10,8 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 
 @ControllerAdvice
@@ -31,9 +29,17 @@ public class AjaxControllerAdvice {
     }
 
     @ExceptionHandler(CartPageDataValidationException.class)
-    public ResponseEntity<Map<Long, String>> handleConstraintViolationException(CartPageDataValidationException exception) {
-        Map<Long, String> errorsMap = exception.getErrorsMap();
+    public ResponseEntity<Map<String, String>> handleConstraintViolationException(CartPageDataValidationException exception) {
+        Map<String, String> errorsMap = createErrorsMap(exception.getErrors());
         return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
+    }
+
+    private Map<String, String> createErrorsMap(Errors errors) {
+        Map<String, String> errorsMap = new HashMap<>();
+        for (ObjectError error : errors.getAllErrors()) {
+            errorsMap.put(error.getCode(), error.getDefaultMessage());
+        }
+        return errorsMap;
     }
 
     private String createMessage(Errors errors) {

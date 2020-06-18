@@ -8,6 +8,7 @@ import com.es.core.cart.MiniCart;
 import com.es.core.order.OutOfStockException;
 import com.es.core.services.MiniCartService;
 import com.es.core.validators.CartPageDataValidationException;
+import com.es.core.validators.CartPageDataValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 
 import javax.validation.Valid;
-import javax.validation.constraints.Size;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +30,8 @@ public class AjaxCartController {
     private MiniCartService miniCartService;
     @Autowired
     private CartService cartService;
+    @Autowired
+    private CartPageDataValidator validator;
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, produces = "application/json")
@@ -53,14 +55,15 @@ public class AjaxCartController {
     @ResponseBody
     @RequestMapping(method = RequestMethod.PUT, produces = "application/json")
     public MiniCart updateCart(
-            @RequestBody @Valid CartPageData cartPageData,
+            @RequestBody CartPageData cartPageData,
             Errors errors) throws OutOfStockException {
+        validator.validate(cartPageData, errors);
         if (!errors.hasErrors()) {
             Map<Long, Long> itemsMap = convertCartItemsListToMap(cartPageData.getCartItems());
             cartService.update(itemsMap);
             return miniCartService.createMiniCart(cartService.getCart());
         } else {
-            throw new CartPageDataValidationException(cartPageData.getErrorsMap());
+            throw new CartPageDataValidationException(errors);
         }
     }
 
