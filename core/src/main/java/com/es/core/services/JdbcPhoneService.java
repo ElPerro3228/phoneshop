@@ -2,12 +2,14 @@ package com.es.core.services;
 
 import com.es.core.model.phone.Phone;
 import com.es.core.model.phone.PhoneDao;
+import com.es.core.model.phone.PhoneNotFoundException;
 import com.es.core.model.phone.SortOrder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class JdbcPhoneService implements PhoneService {
@@ -19,7 +21,7 @@ public class JdbcPhoneService implements PhoneService {
     private PhoneDao phoneDao;
 
     @Override
-    public List<Phone> getPhoneList(int page, String query, String sortField, SortOrder sortOrder) {
+    public List<Phone> getPhonesPage(int page, String query, String sortField, SortOrder sortOrder) {
         int offset = (page - 1) * limit;
         return phoneDao.searchForPhones(offset, limit, query, sortField, sortOrder);
     }
@@ -31,5 +33,15 @@ public class JdbcPhoneService implements PhoneService {
             pagesNumber += 1;
         }
         return pagesNumber;
+    }
+
+    @Override
+    public Phone getPhone(Long phoneId) {
+        Optional<Phone> phone = phoneDao.get(phoneId);
+        if (phone.isPresent()) {
+            return phone.get();
+        } else {
+            throw new PhoneNotFoundException();
+        }
     }
 }

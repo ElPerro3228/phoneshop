@@ -98,7 +98,7 @@ public class JdbcPhoneDao implements PhoneDao{
     }
 
     private String getSortField(String sortField) {
-        return propertyService.getProperty("sortField." + sortField);
+        return propertyService.getProperty(sortField);
     }
 
     @Override

@@ -1,11 +1,14 @@
 package com.es.core.cart;
 
+import com.es.core.model.phone.Phone;
 import com.es.core.order.OutOfStockException;
 import com.es.core.services.CartPriceCalculationService;
+import com.es.core.services.PhoneService;
 import com.es.core.validators.QuantityValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -18,6 +21,8 @@ public class HttpSessionCartService implements CartService {
     private CartPriceCalculationService cartPriceCalculationService;
     @Autowired
     private QuantityValidator quantityValidator;
+    @Autowired
+    private PhoneService phoneService;
 
     @Override
     public Cart getCart() {
@@ -47,6 +52,7 @@ public class HttpSessionCartService implements CartService {
     @Override
     public void remove(Long phoneId) {
         cart.getCartItems().removeIf(cartItem -> cartItem.getPhoneId().equals(phoneId));
+        cart.setCartPrice(cartPriceCalculationService.calculateCartPrice(cart));
     }
 
     private void addOrUpdateCartItem(Long phoneId, Long quantity) throws OutOfStockException {
@@ -59,6 +65,16 @@ public class HttpSessionCartService implements CartService {
         } else {
             addNewItem(phoneId, quantity);
         }
+    }
+
+    @Override
+    public Map<Phone, Long> getCartItems(Cart cart) {
+        Map<Phone, Long> cartItems = new HashMap<>();
+        for (CartItem cartItem : cart.getCartItems()) {
+            Phone phone = phoneService.getPhone(cartItem.getPhoneId());
+            cartItems.put(phone, cartItem.getQuantity());
+        }
+        return cartItems;
     }
 
     private void updateExistingItem(CartItem cartItem, Long quantity) {

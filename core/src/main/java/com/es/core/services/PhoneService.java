@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface PhoneService {
     int getPagesNumber();
-    List<Phone> getPhoneList(int page, String query, String sortField, SortOrder sortOrder);
+    List<Phone> getPhonesPage(int page, String query, String sortField, SortOrder sortOrder);
+    Phone getPhone(Long phoneId);
 }

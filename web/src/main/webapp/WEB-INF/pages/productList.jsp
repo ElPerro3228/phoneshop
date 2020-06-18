@@ -4,7 +4,6 @@
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 
 <tags:master pageTitle="Product List">
-    <p>
     <form>
     <div class="container">
         <div class="row">
@@ -17,7 +16,6 @@
         </div>
     </div>
     </form>
-    </p>
     <p>Found <c:out value="${pageBean.phones.size()}"/> phones.</p>
     <p><c:out value="${pageBean.pagesNumber}"/></p>
     <tags:pageNavigation currentPage="${pageBean.currentPage}" pagesNumber="${pageBean.pagesNumber}"/>
@@ -40,7 +38,7 @@
                     <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}">
                 </td>
                 <td>${phone.brand}</td>
-                <td>${phone.model}</td>
+                <td><a href="<c:url value="productDetails/${phone.id}"/>">${phone.model}</a></td>
                 <td>
                     <c:forEach var="color" items="${phone.colors}">
                         ${color.code}
@@ -58,5 +56,4 @@
             </tr>
         </c:forEach>
     </table>
-    </p>
 </tags:master>

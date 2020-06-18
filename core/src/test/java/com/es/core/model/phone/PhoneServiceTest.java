@@ -18,7 +18,7 @@ public class PhoneServiceTest extends AbstractIntegrationTest {
     public void shouldReturnFirstTenPhonesWhichMatchSearchQueryAndHaveNotEmptyStockAndPrice() {
         String searchQuery = "ARCHOS";
         int page = 1;
-        List<Phone> phones = phoneService.getPhoneList(page, searchQuery, "price", SortOrder.ASC);
+        List<Phone> phones = phoneService.getPhonesPage(page, searchQuery, "price", SortOrder.ASC);
         assertThat(phones).hasSize(10)
                 .allMatch(phone -> phone.getPrice().doubleValue() > 0);
     }
