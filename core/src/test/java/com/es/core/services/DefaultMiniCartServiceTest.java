@@ -6,7 +6,6 @@ import com.es.core.cart.MiniCart;
 import com.es.core.order.OutOfStockException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
