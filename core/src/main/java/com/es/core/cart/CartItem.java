@@ -11,7 +11,7 @@ public class CartItem implements Serializable {
 
     @Positive
     private Long phoneId;
-    @DecimalMin(value = "1")
+    @DecimalMin(value = "1", message = "{validation.moreThanOne}")
     private Long quantity;
 
     public CartItem() {

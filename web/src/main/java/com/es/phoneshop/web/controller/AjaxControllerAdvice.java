@@ -3,6 +3,8 @@ package com.es.phoneshop.web.controller;
 import com.es.core.cart.CartItemValidationException;
 import com.es.core.order.OutOfStockException;
 import com.es.core.validators.CartPageDataValidationException;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
@@ -10,12 +12,17 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
 
 
 @ControllerAdvice
 public class AjaxControllerAdvice {
+
+    @Resource
+    private MessageSource messageSource;
+
     @ExceptionHandler(CartItemValidationException.class)
     public ResponseEntity<AjaxError> handleCartItemValidationException(CartItemValidationException exception) {
         AjaxError error = new AjaxError(createMessage(exception.getErrors()));
@@ -24,7 +31,8 @@ public class AjaxControllerAdvice {
 
     @ExceptionHandler(OutOfStockException.class)
     public ResponseEntity<AjaxError> handleOutOfStockException(OutOfStockException exception) {
-        AjaxError error = new AjaxError(exception.getMessage());
+        String message = messageSource.getMessage(exception.getErrorCode(), null, LocaleContextHolder.getLocale());
+        AjaxError error = new AjaxError(message);
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 

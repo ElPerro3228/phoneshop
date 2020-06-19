@@ -60,7 +60,7 @@ public class HttpSessionCartService implements CartService {
     private void addOrUpdateCartItem(Long phoneId, Long quantity) throws OutOfStockException {
         Optional<CartItem> optionalCartItem = findCartItem(phoneId);
         if (!quantityValidator.isValid(phoneId, quantity)) {
-            throw new OutOfStockException("Invalid quantity");
+            throw new OutOfStockException("out of stock", "validation.outOfStock");
         }
         if (optionalCartItem.isPresent()) {
             updateExistingItem(optionalCartItem.get(), quantity);

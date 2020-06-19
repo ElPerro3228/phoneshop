@@ -1,20 +1,17 @@
 package com.es.phoneshop.web.controller.pages;
 
 import com.es.core.cart.Cart;
-import com.es.core.cart.CartItem;
 import com.es.core.cart.CartPageData;
 import com.es.core.cart.CartService;
 import com.es.core.model.phone.Phone;
 import com.es.core.order.OutOfStockException;
 import com.es.core.services.CartPageDataService;
 import com.es.core.services.CartPriceCalculationService;
-import com.es.core.validators.CartPageDataValidationException;
 import com.es.core.validators.CartPageDataValidator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -30,7 +27,7 @@ public class CartPageController {
     @Resource
     private CartPriceCalculationService cartPriceCalculationService;
     @Resource
-    private CartPageDataValidator validator;
+    private CartPageDataValidator cartPageDataValidator;
     @Resource
     private CartPageDataService cartPageDataService;
 
@@ -44,7 +41,7 @@ public class CartPageController {
 
     @RequestMapping(method = RequestMethod.PUT)
     public String updateCart(@ModelAttribute CartPageData cartPageData, Model model, Errors errors) throws OutOfStockException {
-        validator.validate(cartPageData, errors);
+        cartPageDataValidator.validate(cartPageData, errors);
         Cart cart = cartService.getCart();
         if (!errors.hasErrors()) {
             cartService.update(cartPageData.getCartItems());
