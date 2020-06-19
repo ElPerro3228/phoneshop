@@ -1,22 +1,22 @@
 package com.es.core.validators;
 
-import com.es.core.cart.CartItem;
 import com.es.core.cart.CartPageData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
-import java.util.List;
 import java.util.Map;
 
 @Service
 public class CartPageDataValidator implements Validator {
 
-   @Autowired
    private QuantityValidator quantityValidator;
+
+   @Autowired
+   public void setQuantityValidator(QuantityValidator quantityValidator) {
+      this.quantityValidator = quantityValidator;
+   }
 
    @Override
    public boolean supports(Class<?> aClass) {

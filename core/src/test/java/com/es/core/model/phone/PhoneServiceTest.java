@@ -28,4 +28,15 @@ public class PhoneServiceTest extends AbstractIntegrationTest {
         int pagesNumber = phoneService.getPagesNumber();
         assertThat(pagesNumber).isEqualTo(2);
     }
+
+    @Test
+    public void shouldReturnPhoneIfPresent() {
+        Phone phone = phoneService.getPhone(1001L);
+        assertThat(phone.getId()).isEqualTo(1001L);
+    }
+
+    @Test(expected = PhoneNotFoundException.class)
+    public void shouldThrowPhoneNotFoundExceptionIfNotPresent() {
+        Phone phone = phoneService.getPhone(1L);
+    }
 }

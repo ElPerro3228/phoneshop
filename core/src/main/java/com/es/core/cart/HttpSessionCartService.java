@@ -70,16 +70,6 @@ public class HttpSessionCartService implements CartService {
     }
 
     @Override
-    public Map<Phone, Long> getCartItems(Cart cart) {
-        Map<Phone, Long> cartItems = new HashMap<>();
-        for (CartItem cartItem : cart.getCartItems()) {
-            Phone phone = phoneService.getPhone(cartItem.getPhoneId());
-            cartItems.put(phone, cartItem.getQuantity());
-        }
-        return cartItems;
-    }
-
-    @Override
     public List<Phone> getPhones(Cart cart) {
         List<CartItem> cartItems = cart.getCartItems();
         return cartItems.stream()

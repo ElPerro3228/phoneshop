@@ -3,6 +3,7 @@ package com.es.core.cart;
 import com.es.core.model.phone.Phone;
 import com.es.core.order.OutOfStockException;
 import com.es.core.services.CartPriceCalculationService;
+import com.es.core.services.PhoneService;
 import com.es.core.validators.QuantityValidator;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,6 +32,8 @@ public class HttpSessionCartServiceTest {
     private CartPriceCalculationService cartPriceCalculationService;
     @Mock
     private QuantityValidator quantityValidator;
+    @Mock
+    private PhoneService phoneService;
     @InjectMocks
     private CartService cartService = new HttpSessionCartService();
     @Captor
@@ -102,5 +105,21 @@ public class HttpSessionCartServiceTest {
         cartService.remove(1L);
 
         assertThat(cartItems).hasSize(0);
+    }
+
+    @Test
+    public void shouldReturnListOfPhones() {
+        List<CartItem> cartItems = new ArrayList<>();
+        cartItems.add(new CartItem(1L, 1L));
+        cartItems.add(new CartItem(2L, 1L));
+        cartItems.add(new CartItem(3L, 1L));
+
+        when(cart.getCartItems()).thenReturn(cartItems);
+        when(phoneService.getPhone(anyLong())).thenReturn(new Phone());
+
+        List<Phone> phones = cartService.getPhones(cart);
+
+        verify(phoneService, times(3)).getPhone(anyLong());
+        assertThat(phones).hasSize(3);
     }
 }

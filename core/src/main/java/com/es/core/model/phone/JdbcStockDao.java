@@ -20,6 +20,6 @@ public class JdbcStockDao implements StockDao {
 
     @Override
     public Stock getStock(Long phoneId) {
-        return jdbcTemplate.queryForObject("select stock from stocks where phoneId = " + phoneId + ";", stockBeanPropertyRowMapper);
+        return jdbcTemplate.queryForObject("select * from stocks where phoneId = " + phoneId + ";", stockBeanPropertyRowMapper);
     }
 }

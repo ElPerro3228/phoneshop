@@ -45,7 +45,7 @@ public class CartPageController {
         Cart cart = cartService.getCart();
         if (!errors.hasErrors()) {
             cartService.update(cartPageData.getCartItems());
-            return "redirect:cartPage";
+            return "redirect:cart";
         }
         fillModel(model, cart);
         return "cartPage";

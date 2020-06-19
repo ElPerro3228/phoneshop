@@ -20,7 +20,5 @@ public interface CartService {
 
     void remove(Long phoneId);
 
-    Map<Phone, Long> getCartItems(Cart cart);
-
     List<Phone> getPhones(Cart cart);
 }
