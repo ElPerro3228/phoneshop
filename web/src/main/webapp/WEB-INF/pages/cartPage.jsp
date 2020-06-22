@@ -4,7 +4,7 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="sf" %>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 
-<tags:master pageTitle="Cart Page">
+<tags:master pageTitle="Cart Page" miniCart="${miniCart}">
     <div class="container">
         <div class="row">
             <div class="col-sm-4">

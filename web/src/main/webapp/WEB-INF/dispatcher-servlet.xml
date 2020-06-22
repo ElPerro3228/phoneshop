@@ -18,6 +18,10 @@
 
     <mvc:annotation-driven conversion-service="conversionService" validator="validator"/>
 
+    <mvc:interceptors>
+        <bean id="miniCartInterceptor" class="com.es.phoneshop.web.handlerinterceptors.MiniCartInterceptor"/>
+    </mvc:interceptors>
+
 
     <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
         <property name="converters">

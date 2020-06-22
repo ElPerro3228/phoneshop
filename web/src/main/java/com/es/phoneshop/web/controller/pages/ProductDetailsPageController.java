@@ -28,10 +28,7 @@ public class ProductDetailsPageController {
             @PathVariable(value = "phoneId") Long phoneId, Model model
     ) {
         Phone phone = phoneService.getPhone(phoneId);
-        Cart cart = cartService.getCart();
-        MiniCart miniCart = miniCartService.createMiniCart(cart);
         model.addAttribute("phone", phone);
-        model.addAttribute("miniCart", miniCart);
         return "phoneDetails";
     }
 }
