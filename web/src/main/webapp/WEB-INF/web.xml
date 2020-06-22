@@ -19,24 +19,6 @@
     <url-pattern>/</url-pattern>
   </servlet-mapping>
 
-  <filter>
-    <filter-name>HiddenHttpMethodFilter</filter-name>
-    <filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
-  </filter>
-  <filter-mapping>
-    <filter-name>HiddenHttpMethodFilter</filter-name>
-    <servlet-name>dispatcher</servlet-name>
-  </filter-mapping>
-
-  <filter>
-    <filter-name>getMethodConvertingFilter</filter-name>
-    <filter-class>com.es.phoneshop.web.controller.filters.GetMethodConvertingFilter</filter-class>
-  </filter>
-  <filter-mapping>
-    <filter-name>getMethodConvertingFilter</filter-name>
-    <url-pattern>/*</url-pattern>
-    <dispatcher>FORWARD</dispatcher>
-  </filter-mapping>
 
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>

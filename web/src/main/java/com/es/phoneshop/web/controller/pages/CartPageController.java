@@ -25,8 +25,6 @@ public class CartPageController {
     @Resource
     private CartService cartService;
     @Resource
-    private CartPriceCalculationService cartPriceCalculationService;
-    @Resource
     private CartPageDataValidator cartPageDataValidator;
     @Resource
     private CartPageDataService cartPageDataService;
@@ -39,7 +37,7 @@ public class CartPageController {
         return "cartPage";
     }
 
-    @RequestMapping(method = RequestMethod.PUT)
+    @RequestMapping(method = RequestMethod.POST)
     public String updateCart(@ModelAttribute CartPageData cartPageData, Model model, Errors errors) throws OutOfStockException {
         cartPageDataValidator.validate(cartPageData, errors);
         Cart cart = cartService.getCart();
@@ -53,7 +51,7 @@ public class CartPageController {
 
     private void fillModel(Model model, Cart cart) {
         List<Phone> phones = cartService.getPhones(cart);
-        BigDecimal cartPrice = cartPriceCalculationService.calculateCartPrice(cart);
+        BigDecimal cartPrice = cart.getCartPrice();
         model.addAttribute("phones", phones);
         model.addAttribute("cartPrice", cartPrice);
     }

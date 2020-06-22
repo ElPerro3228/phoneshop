@@ -27,10 +27,9 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 @RunWith(MockitoJUnitRunner.class)
 @WebAppConfiguration
@@ -39,8 +38,6 @@ public class CartPageControllerTest {
     private StockDao stockDao;
     @Mock
     private CartService cartService;
-    @Mock
-    private CartPriceCalculationService cartPriceCalculationService;
     @Spy
     private QuantityValidator quantityValidator = new QuantityValidator();
     @Spy
@@ -69,7 +66,6 @@ public class CartPageControllerTest {
         phones.add(phone1);
         phones.add(phone2);
         when(cartService.getPhones(eq(cart))).thenReturn(phones);
-        when(cartPriceCalculationService.calculateCartPrice(eq(cart))).thenReturn(new BigDecimal("100"));
     }
 
     @Test
@@ -90,7 +86,7 @@ public class CartPageControllerTest {
         when(stockDao.getStock(any())).thenReturn(stock);
         MockMvc mockMvc = standaloneSetup(cartPageController).build();
 
-        mockMvc.perform(put("/cart")
+        mockMvc.perform(post("/cart")
                         .param("cartItems[1]", "1")
                         .param("cartItems[2]", "1"))
                 .andExpect(redirectedUrl("cart"));
@@ -104,7 +100,7 @@ public class CartPageControllerTest {
         when(stockDao.getStock(eq(2L))).thenReturn(stock);
         MockMvc mockMvc = standaloneSetup(cartPageController).build();
 
-        mockMvc.perform(put("/cart")
+        mockMvc.perform(post("/cart")
                 .param("cartItems[1]", "100")
                 .param("cartItems[2]", "-1"))
                 .andExpect(view().name("cartPage"))

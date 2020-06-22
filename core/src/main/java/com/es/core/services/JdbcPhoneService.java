@@ -38,10 +38,6 @@ public class JdbcPhoneService implements PhoneService {
     @Override
     public Phone getPhone(Long phoneId) {
         Optional<Phone> phone = phoneDao.get(phoneId);
-        if (phone.isPresent()) {
-            return phone.get();
-        } else {
-            throw new PhoneNotFoundException();
-        }
+        return phone.orElseThrow(PhoneNotFoundException::new);
     }
 }

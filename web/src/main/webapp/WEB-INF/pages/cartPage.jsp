@@ -24,7 +24,7 @@
 
     </div>
     <sf:form method="post" modelAttribute="cartPageData">
-    <input type="hidden" name="_method" value="PUT">
+<%--    <input type="hidden" name="_method" value="PUT">--%>
     <table border="1px" class="table">
         <thead>
         <tr>
