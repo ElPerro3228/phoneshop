@@ -1,10 +1,8 @@
 package com.es.core.services;
 
-import com.es.core.cart.CartItem;
-import com.es.core.cart.CartPageData;
-
-import java.util.List;
+import com.es.core.cart.Cart;
+import com.es.core.cart.CartPageDTO;
 
 public interface CartPageDataService {
-    CartPageData createCartPageData(List<CartItem> cartItems);
+    CartPageDTO createCartPageData(Cart cart);
 }

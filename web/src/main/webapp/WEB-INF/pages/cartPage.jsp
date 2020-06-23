@@ -12,7 +12,7 @@
             </div>
             <div class="col-sm-8">
                 <h5 id="total-price">
-                    Price: <fmt:formatNumber value="${cartPrice}" type="currency" currencySymbol="$"/>
+                    Price: <fmt:formatNumber value="${cartPageDTO.cartPrice}" type="currency" currencySymbol="$"/>
                 </h5>
             </div>
         </div>
@@ -23,8 +23,8 @@
     <div class="error" id="error-panel">
 
     </div>
-    <sf:form method="post" modelAttribute="cartPageData">
-<%--    <input type="hidden" name="_method" value="PUT">--%>
+    <sf:form method="post" modelAttribute="cartPageDTO">
+    <sf:input path="cartPrice" value="${cartPageDTO.cartPrice}" type="hidden"/>
     <table border="1px" class="table">
         <thead>
         <tr>
@@ -35,17 +35,15 @@
             <td>Action</td>
         </tr>
         </thead>
-        <c:forEach var="phone" items="${phones}">
+        <c:forEach var="phone" items="${cartPageDTO.phones}" varStatus="status">
             <tr class="cart-item">
                 <td>${phone.brand}</td>
                 <td><a href="<c:url value="productDetails/${phone.id}"/>">${phone.model}</a></td>
                 <td> <fmt:formatNumber value="${phone.price}" type="currency" currencySymbol="$"/> </td>
                 <div class="container">
                     <td>
-                        <sf:input path="cartItems[${phone.id}]" value="${cartPageData.cartItems[phone.id]}"/>
+                        <sf:input path="cartItems[${phone.id}]" value="${cartPageDTO.cartItems[phone.id]}"/>
                         <sf:errors path="cartItems[${phone.id}]" cssClass="error" cssStyle="color: red"/>
-                        <%--<input name="cart-item-quantity" id="${entry.key.id}" value="${entry.value}">
-                        <div class="error" style="color: red"></div>--%>
                     </td>
                     <td>
                         <button name="delete-from-cart" type="button" class="btn btn-outline-success" data-phone-id="${phone.id}">Delete</button>

@@ -1,6 +1,6 @@
 package com.es.core.validators;
 
-import com.es.core.cart.CartPageData;
+import com.es.core.cart.CartPageDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
@@ -20,13 +20,13 @@ public class CartPageDataValidator implements Validator {
 
    @Override
    public boolean supports(Class<?> aClass) {
-      return CartPageData.class.isAssignableFrom(aClass);
+      return CartPageDTO.class.isAssignableFrom(aClass);
    }
 
    @Override
    public void validate(Object o, Errors errors) {
-      CartPageData cartPageData = (CartPageData) o;
-      Map<Long, Long> cartItems = cartPageData.getCartItems();
+      CartPageDTO cartPageDTO = (CartPageDTO) o;
+      Map<Long, Long> cartItems = cartPageDTO.getCartItems();
       for (Map.Entry<Long, Long> entry : cartItems.entrySet()) {
          if (entry.getValue() < 0) {
             errors.rejectValue("cartItems[" + entry.getKey().toString() + "]", "validation.cartpage.quantity", "Must be more or equal to 0");

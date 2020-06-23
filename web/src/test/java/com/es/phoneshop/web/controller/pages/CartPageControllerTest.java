@@ -2,12 +2,12 @@ package com.es.phoneshop.web.controller.pages;
 
 import com.es.core.cart.Cart;
 import com.es.core.cart.CartItem;
+import com.es.core.cart.CartPageDTO;
 import com.es.core.cart.CartService;
 import com.es.core.model.phone.Phone;
 import com.es.core.model.phone.Stock;
 import com.es.core.model.phone.StockDao;
 import com.es.core.services.CartPageDataService;
-import com.es.core.services.CartPriceCalculationService;
 import com.es.core.services.DefaultCartPageDataService;
 import com.es.core.validators.CartPageDataValidator;
 import com.es.core.validators.QuantityValidator;
@@ -21,7 +21,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +41,7 @@ public class CartPageControllerTest {
     private QuantityValidator quantityValidator = new QuantityValidator();
     @Spy
     private CartPageDataValidator cartPageDataValidator = new CartPageDataValidator();
-    @Spy
+    @Mock
     private CartPageDataService cartPageDataService = new DefaultCartPageDataService();
     @InjectMocks
     private CartPageController cartPageController = new CartPageController();
@@ -65,18 +64,16 @@ public class CartPageControllerTest {
         List<Phone> phones = new ArrayList<>();
         phones.add(phone1);
         phones.add(phone2);
-        when(cartService.getPhones(eq(cart))).thenReturn(phones);
     }
 
     @Test
     public void testGetCart() throws Exception {
+        when(cartPageDataService.createCartPageData(any())).thenReturn(new CartPageDTO());
         MockMvc mockMvc = standaloneSetup(cartPageController).build();
 
         mockMvc.perform(get("/cart"))
                 .andExpect(view().name("cartPage"))
-                .andExpect(model().attributeExists("cartPageData"))
-                .andExpect(model().attributeExists("phones"))
-                .andExpect(model().attributeExists("cartPrice"));
+                .andExpect(model().attributeExists("cartPageData"));
     }
 
     @Test
@@ -104,8 +101,8 @@ public class CartPageControllerTest {
                 .param("cartItems[1]", "100")
                 .param("cartItems[2]", "-1"))
                 .andExpect(view().name("cartPage"))
-                .andExpect(model().attributeHasFieldErrors("cartPageData", "cartItems[1]", "cartItems[2]"))
-                .andExpect(model().attributeHasFieldErrorCode("cartPageData", "cartItems[1]", "validation.outOfStock"))
-                .andExpect(model().attributeHasFieldErrorCode("cartPageData", "cartItems[2]", "validation.cartpage.quantity"));
+                .andExpect(model().attributeHasFieldErrors("cartPageDTO", "cartItems[1]", "cartItems[2]"))
+                .andExpect(model().attributeHasFieldErrorCode("cartPageDTO", "cartItems[1]", "validation.outOfStock"))
+                .andExpect(model().attributeHasFieldErrorCode("cartPageDTO", "cartItems[2]", "validation.cartpage.quantity"));
     }
 }

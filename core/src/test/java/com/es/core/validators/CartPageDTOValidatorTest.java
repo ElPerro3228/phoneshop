@@ -1,6 +1,6 @@
 package com.es.core.validators;
 
-import com.es.core.cart.CartPageData;
+import com.es.core.cart.CartPageDTO;
 import com.es.core.model.phone.AbstractIntegrationTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,7 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CartPageDataValidatorTest extends AbstractIntegrationTest {
+public class CartPageDTOValidatorTest extends AbstractIntegrationTest {
     @Autowired
     private CartPageDataValidator cartPageDataValidator;
 
@@ -21,10 +21,10 @@ public class CartPageDataValidatorTest extends AbstractIntegrationTest {
         Map<Long, Long> cartItems = new HashMap<>();
         cartItems.put(1001L, 1L);
         cartItems.put(1002L, 1L);
-        CartPageData cartPageData = new CartPageData();
-        cartPageData.setCartItems(cartItems);
-        Errors errors = new BeanPropertyBindingResult(cartPageData, "cartPageData");
-        cartPageDataValidator.validate(cartPageData, errors);
+        CartPageDTO cartPageDTO = new CartPageDTO();
+        cartPageDTO.setCartItems(cartItems);
+        Errors errors = new BeanPropertyBindingResult(cartPageDTO, "cartPageDTO");
+        cartPageDataValidator.validate(cartPageDTO, errors);
 
         assertThat(errors.hasErrors()).isFalse();
     }
@@ -34,10 +34,10 @@ public class CartPageDataValidatorTest extends AbstractIntegrationTest {
         Map<Long, Long> cartItems = new HashMap<>();
         cartItems.put(1001L, -1L);
         cartItems.put(1002L, 1L);
-        CartPageData cartPageData = new CartPageData();
-        cartPageData.setCartItems(cartItems);
-        Errors errors = new BeanPropertyBindingResult(cartPageData, "cartPageData");
-        cartPageDataValidator.validate(cartPageData, errors);
+        CartPageDTO cartPageDTO = new CartPageDTO();
+        cartPageDTO.setCartItems(cartItems);
+        Errors errors = new BeanPropertyBindingResult(cartPageDTO, "cartPageDTO");
+        cartPageDataValidator.validate(cartPageDTO, errors);
 
         assertThat(errors.hasErrors()).isTrue();
         assertThat(errors.getFieldError("cartItems[1001]")).isNotNull();
@@ -50,10 +50,10 @@ public class CartPageDataValidatorTest extends AbstractIntegrationTest {
         Map<Long, Long> cartItems = new HashMap<>();
         cartItems.put(1001L, 1000L);
         cartItems.put(1002L, 1L);
-        CartPageData cartPageData = new CartPageData();
-        cartPageData.setCartItems(cartItems);
-        Errors errors = new BeanPropertyBindingResult(cartPageData, "cartPageData");
-        cartPageDataValidator.validate(cartPageData, errors);
+        CartPageDTO cartPageDTO = new CartPageDTO();
+        cartPageDTO.setCartItems(cartItems);
+        Errors errors = new BeanPropertyBindingResult(cartPageDTO, "cartPageDTO");
+        cartPageDataValidator.validate(cartPageDTO, errors);
 
         assertThat(errors.hasErrors()).isTrue();
         assertThat(errors.getFieldError("cartItems[1001]")).isNotNull();
@@ -66,10 +66,10 @@ public class CartPageDataValidatorTest extends AbstractIntegrationTest {
         Map<Long, Long> cartItems = new HashMap<>();
         cartItems.put(1001L, 1000L);
         cartItems.put(1002L, -1L);
-        CartPageData cartPageData = new CartPageData();
-        cartPageData.setCartItems(cartItems);
-        Errors errors = new BeanPropertyBindingResult(cartPageData, "cartPageData");
-        cartPageDataValidator.validate(cartPageData, errors);
+        CartPageDTO cartPageDTO = new CartPageDTO();
+        cartPageDTO.setCartItems(cartItems);
+        Errors errors = new BeanPropertyBindingResult(cartPageDTO, "cartPageDTO");
+        cartPageDataValidator.validate(cartPageDTO, errors);
 
         assertThat(errors.hasErrors()).isTrue();
         assertThat(errors.getFieldErrorCount()).isEqualTo(2);
