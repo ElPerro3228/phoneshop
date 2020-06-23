@@ -1,10 +1,6 @@
 package com.es.phoneshop.web.controller.pages;
 
-import com.es.core.cart.Cart;
-import com.es.core.cart.CartService;
-import com.es.core.cart.MiniCart;
 import com.es.core.model.phone.Phone;
-import com.es.core.services.MiniCartService;
 import com.es.core.services.PhoneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,10 +14,6 @@ public class ProductDetailsPageController {
 
     @Autowired
     private PhoneService phoneService;
-    @Autowired
-    private CartService cartService;
-    @Autowired
-    private MiniCartService miniCartService;
 
     @RequestMapping(value = "/{phoneId}")
     public String getPhoneDetailsPage(

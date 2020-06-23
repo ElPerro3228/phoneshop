@@ -42,7 +42,7 @@ public class CartPageDataValidatorTest extends AbstractIntegrationTest {
         assertThat(errors.hasErrors()).isTrue();
         assertThat(errors.getFieldError("cartItems[1001]")).isNotNull();
         assertThat(errors.getFieldErrorCount()).isEqualTo(1);
-        assertThat(errors.getFieldError("cartItems[1001]").getCode()).isEqualTo("validation.moreThanOne");
+        assertThat(errors.getFieldError("cartItems[1001]").getCode()).isEqualTo("validation.cartpage.quantity");
     }
 
     @Test
@@ -76,6 +76,6 @@ public class CartPageDataValidatorTest extends AbstractIntegrationTest {
         assertThat(errors.getFieldError("cartItems[1001]")).isNotNull();
         assertThat(errors.getFieldError("cartItems[1001]").getCode()).isEqualTo("validation.outOfStock");
         assertThat(errors.getFieldError("cartItems[1002]")).isNotNull();
-        assertThat(errors.getFieldError("cartItems[1002]").getCode()).isEqualTo("validation.moreThanOne");
+        assertThat(errors.getFieldError("cartItems[1002]").getCode()).isEqualTo("validation.cartpage.quantity");
     }
 }

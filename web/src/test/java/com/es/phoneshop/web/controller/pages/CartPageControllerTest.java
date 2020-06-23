@@ -106,6 +106,6 @@ public class CartPageControllerTest {
                 .andExpect(view().name("cartPage"))
                 .andExpect(model().attributeHasFieldErrors("cartPageData", "cartItems[1]", "cartItems[2]"))
                 .andExpect(model().attributeHasFieldErrorCode("cartPageData", "cartItems[1]", "validation.outOfStock"))
-                .andExpect(model().attributeHasFieldErrorCode("cartPageData", "cartItems[2]", "validation.moreThanOne"));
+                .andExpect(model().attributeHasFieldErrorCode("cartPageData", "cartItems[2]", "validation.cartpage.quantity"));
     }
 }

@@ -46,7 +46,11 @@ public class HttpSessionCartService implements CartService {
     @Override
     public void update(Map<Long, Long> items) throws OutOfStockException {
         for (Map.Entry<Long, Long> entry : items.entrySet()) {
-            addOrUpdateCartItem(entry.getKey(), entry.getValue());
+            if (entry.getValue() != 0) {
+                addOrUpdateCartItem(entry.getKey(), entry.getValue());
+            } else {
+                remove(entry.getKey());
+            }
         }
         cart.setCartPrice(cartPriceCalculationService.calculateCartPrice(cart));
     }

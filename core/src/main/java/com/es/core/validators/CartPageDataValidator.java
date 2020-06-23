@@ -28,8 +28,8 @@ public class CartPageDataValidator implements Validator {
       CartPageData cartPageData = (CartPageData) o;
       Map<Long, Long> cartItems = cartPageData.getCartItems();
       for (Map.Entry<Long, Long> entry : cartItems.entrySet()) {
-         if (entry.getValue() < 1) {
-            errors.rejectValue("cartItems[" + entry.getKey().toString() + "]", "validation.moreThanOne", "must be more than 1");
+         if (entry.getValue() < 0) {
+            errors.rejectValue("cartItems[" + entry.getKey().toString() + "]", "validation.cartpage.quantity", "Must be more or equal to 0");
          }
          if (!quantityValidator.isValid(entry.getKey(), entry.getValue())) {
             errors.rejectValue("cartItems[" + entry.getKey().toString() + "]", "validation.outOfStock", "Out of stock");
