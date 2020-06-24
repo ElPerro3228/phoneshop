@@ -17,17 +17,25 @@ import java.util.Map;
 public class DefaultCartPageDataService implements CartPageDataService{
 
     @Autowired
-    private CartService cartService;
+    private PhoneService phoneService;
 
     @Override
     public CartPageDTO createCartPageData(Cart cart) {
         List<CartItem> cartItems = cart.getCartItems();
-        Map<Long, Long> itemsMap = new HashMap<>();
+        Map<Phone, Long> itemsMap = new HashMap<>();
         for (CartItem cartItem : cartItems) {
-            itemsMap.put(cartItem.getPhoneId(), cartItem.getQuantity());
+            itemsMap.put(phoneService.getPhone(cartItem.getPhoneId()), cartItem.getQuantity());
         }
-        List<Phone> phones = cartService.getPhones(cart);
         BigDecimal cartPrice = cart.getCartPrice();
-        return new CartPageDTO(itemsMap, phones, cartPrice);
+        return new CartPageDTO(itemsMap, cartPrice);
+    }
+
+    @Override
+    public Map<Long, Long> convert(Map<Phone, Long> cartItems) {
+        Map<Long, Long> map = new HashMap<>();
+        for (Map.Entry<Phone, Long> entry : cartItems.entrySet()) {
+            map.put(entry.getKey().getId(), entry.getValue());
+        }
+        return map;
     }
 }

@@ -35,7 +35,7 @@
             <td>Action</td>
         </tr>
         </thead>
-        <c:forEach var="phone" items="${cartPageDTO.phones}" varStatus="status">
+        <c:forEach var="phone" items="${cartPageDTO.cartItems.keySet()}" varStatus="status">
             <tr class="cart-item">
                 <td>${phone.brand}</td>
                 <td><a href="<c:url value="productDetails/${phone.id}"/>">${phone.model}</a></td>

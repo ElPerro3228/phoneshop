@@ -1,6 +1,7 @@
 package com.es.core.validators;
 
 import com.es.core.cart.CartPageDTO;
+import com.es.core.model.phone.Phone;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
@@ -26,13 +27,13 @@ public class CartPageDataValidator implements Validator {
    @Override
    public void validate(Object o, Errors errors) {
       CartPageDTO cartPageDTO = (CartPageDTO) o;
-      Map<Long, Long> cartItems = cartPageDTO.getCartItems();
-      for (Map.Entry<Long, Long> entry : cartItems.entrySet()) {
+      Map<Phone, Long> cartItems = cartPageDTO.getCartItems();
+      for (Map.Entry<Phone, Long> entry : cartItems.entrySet()) {
          if (entry.getValue() < 0) {
-            errors.rejectValue("cartItems[" + entry.getKey().toString() + "]", "validation.cartpage.quantity", "Must be more or equal to 0");
+            errors.rejectValue("cartItems[" + entry.getKey().getId() + "]", "validation.cartpage.quantity", "Must be more or equal to 0");
          }
-         if (!quantityValidator.isValid(entry.getKey(), entry.getValue())) {
-            errors.rejectValue("cartItems[" + entry.getKey().toString() + "]", "validation.outOfStock", "Out of stock");
+         if (!quantityValidator.isValid(entry.getKey().getId(), entry.getValue())) {
+            errors.rejectValue("cartItems[" + entry.getKey().getId() + "]", "validation.outOfStock", "Out of stock");
          }
       }
    }

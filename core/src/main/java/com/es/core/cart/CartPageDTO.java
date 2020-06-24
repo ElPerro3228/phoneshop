@@ -10,37 +10,27 @@ import java.util.Map;
 
 public class CartPageDTO implements Serializable {
 
-    private Map<Long, Long> cartItems;
-    private List<Phone> phones;
+    private Map<Phone, Long> cartItems;
     private BigDecimal cartPrice;
 
     public CartPageDTO() {
     }
 
-    public CartPageDTO(Map<Long, Long> cartItems) {
+    public CartPageDTO(Map<Phone, Long> cartItems) {
         this.cartItems = cartItems;
     }
 
-    public CartPageDTO(Map<Long, Long> cartItems, List<Phone> phones, BigDecimal cartPrice) {
+    public CartPageDTO(Map<Phone, Long> cartItems, BigDecimal cartPrice) {
         this.cartItems = cartItems;
-        this.phones = phones;
         this.cartPrice = cartPrice;
     }
 
-    public Map<Long, Long> getCartItems() {
+    public Map<Phone, Long> getCartItems() {
         return cartItems;
     }
 
-    public void setCartItems(Map<Long, Long> cartItems) {
+    public void setCartItems(Map<Phone, Long> cartItems) {
         this.cartItems = cartItems;
-    }
-
-    public List<Phone> getPhones() {
-        return phones;
-    }
-
-    public void setPhones(List<Phone> phones) {
-        this.phones = phones;
     }
 
     public BigDecimal getCartPrice() {

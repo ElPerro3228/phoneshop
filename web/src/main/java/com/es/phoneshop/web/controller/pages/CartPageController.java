@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.annotation.Resource;
-import java.math.BigDecimal;
-import java.util.List;
 
 @Controller
 @RequestMapping(value = "/cart")
@@ -37,19 +35,10 @@ public class CartPageController {
     @RequestMapping(method = RequestMethod.POST)
     public String updateCart(CartPageDTO cartPageDTO, Model model, Errors errors) throws OutOfStockException {
         cartPageDataValidator.validate(cartPageDTO, errors);
-        Cart cart = cartService.getCart();
         if (!errors.hasErrors()) {
-            cartService.update(cartPageDTO.getCartItems());
+            cartService.update(cartPageDataService.convert(cartPageDTO.getCartItems()));
             return "redirect:cart";
         }
-        cartPageDTO.setPhones(cartService.getPhones(cart));
         return "cartPage";
-    }
-
-    private void fillModel(Model model, Cart cart) {
-        List<Phone> phones = cartService.getPhones(cart);
-        BigDecimal cartPrice = cart.getCartPrice();
-        model.addAttribute("phones", phones);
-        model.addAttribute("cartPrice", cartPrice);
     }
 }

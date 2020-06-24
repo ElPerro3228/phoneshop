@@ -2,8 +2,10 @@ package com.es.core.validators;
 
 import com.es.core.cart.CartPageDTO;
 import com.es.core.model.phone.AbstractIntegrationTest;
+import com.es.core.model.phone.Phone;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 
@@ -15,15 +17,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CartPageDTOValidatorTest extends AbstractIntegrationTest {
     @Autowired
     private CartPageDataValidator cartPageDataValidator;
+    @Autowired
+    private ConversionService conversionService;
 
     @Test
     public void shouldNotRejectValuesIfTheyCorrect() {
-        Map<Long, Long> cartItems = new HashMap<>();
-        cartItems.put(1001L, 1L);
-        cartItems.put(1002L, 1L);
+        Map<Phone, Long> cartItems = new HashMap<>();
+        Phone phone1 = new Phone();
+        phone1.setId(1001L);
+        Phone phone2 = new Phone();
+        phone2.setId(1002L);
+        cartItems.put(phone1, 1L);
+        cartItems.put(phone2, 1L);
         CartPageDTO cartPageDTO = new CartPageDTO();
         cartPageDTO.setCartItems(cartItems);
-        Errors errors = new BeanPropertyBindingResult(cartPageDTO, "cartPageDTO");
+        BeanPropertyBindingResult beanPropertyBindingResult = new BeanPropertyBindingResult(cartPageDTO, "cartPageDTO");
+        beanPropertyBindingResult.initConversion(conversionService);
+        Errors errors = beanPropertyBindingResult;
         cartPageDataValidator.validate(cartPageDTO, errors);
 
         assertThat(errors.hasErrors()).isFalse();
@@ -31,12 +41,18 @@ public class CartPageDTOValidatorTest extends AbstractIntegrationTest {
 
     @Test
     public void shouldRejectValueWithNegativeQuantity() {
-        Map<Long, Long> cartItems = new HashMap<>();
-        cartItems.put(1001L, -1L);
-        cartItems.put(1002L, 1L);
+        Map<Phone, Long> cartItems = new HashMap<>();
+        Phone phone1 = new Phone();
+        phone1.setId(1001L);
+        Phone phone2 = new Phone();
+        phone2.setId(1002L);
+        cartItems.put(phone1, -1L);
+        cartItems.put(phone2, 1L);
         CartPageDTO cartPageDTO = new CartPageDTO();
         cartPageDTO.setCartItems(cartItems);
-        Errors errors = new BeanPropertyBindingResult(cartPageDTO, "cartPageDTO");
+        BeanPropertyBindingResult beanPropertyBindingResult = new BeanPropertyBindingResult(cartPageDTO, "cartPageDTO");
+        beanPropertyBindingResult.initConversion(conversionService);
+        Errors errors = beanPropertyBindingResult;
         cartPageDataValidator.validate(cartPageDTO, errors);
 
         assertThat(errors.hasErrors()).isTrue();
@@ -47,12 +63,18 @@ public class CartPageDTOValidatorTest extends AbstractIntegrationTest {
 
     @Test
     public void shouldRejectQuantityWhichIsOutOfStock() {
-        Map<Long, Long> cartItems = new HashMap<>();
-        cartItems.put(1001L, 1000L);
-        cartItems.put(1002L, 1L);
+        Map<Phone, Long> cartItems = new HashMap<>();
+        Phone phone1 = new Phone();
+        phone1.setId(1001L);
+        Phone phone2 = new Phone();
+        phone2.setId(1002L);
+        cartItems.put(phone1, 1000L);
+        cartItems.put(phone2, 1L);
         CartPageDTO cartPageDTO = new CartPageDTO();
         cartPageDTO.setCartItems(cartItems);
-        Errors errors = new BeanPropertyBindingResult(cartPageDTO, "cartPageDTO");
+        BeanPropertyBindingResult beanPropertyBindingResult = new BeanPropertyBindingResult(cartPageDTO, "cartPageDTO");
+        beanPropertyBindingResult.initConversion(conversionService);
+        Errors errors = beanPropertyBindingResult;
         cartPageDataValidator.validate(cartPageDTO, errors);
 
         assertThat(errors.hasErrors()).isTrue();
@@ -63,12 +85,18 @@ public class CartPageDTOValidatorTest extends AbstractIntegrationTest {
 
     @Test
     public void shouldRejectManyValuesWithWrongParameters() {
-        Map<Long, Long> cartItems = new HashMap<>();
-        cartItems.put(1001L, 1000L);
-        cartItems.put(1002L, -1L);
+        Map<Phone, Long> cartItems = new HashMap<>();
+        Phone phone1 = new Phone();
+        phone1.setId(1001L);
+        Phone phone2 = new Phone();
+        phone2.setId(1002L);
+        cartItems.put(phone1, 1000L);
+        cartItems.put(phone2, -1L);
         CartPageDTO cartPageDTO = new CartPageDTO();
         cartPageDTO.setCartItems(cartItems);
-        Errors errors = new BeanPropertyBindingResult(cartPageDTO, "cartPageDTO");
+        BeanPropertyBindingResult beanPropertyBindingResult = new BeanPropertyBindingResult(cartPageDTO, "cartPageDTO");
+        beanPropertyBindingResult.initConversion(conversionService);
+        Errors errors = beanPropertyBindingResult;
         cartPageDataValidator.validate(cartPageDTO, errors);
 
         assertThat(errors.hasErrors()).isTrue();

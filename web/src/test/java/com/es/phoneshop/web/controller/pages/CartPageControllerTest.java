@@ -18,6 +18,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.format.support.FormattingConversionService;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -73,7 +75,7 @@ public class CartPageControllerTest {
 
         mockMvc.perform(get("/cart"))
                 .andExpect(view().name("cartPage"))
-                .andExpect(model().attributeExists("cartPageData"));
+                .andExpect(model().attributeExists("cartPageDTO"));
     }
 
     @Test
