@@ -4,6 +4,7 @@ import com.es.core.cart.Cart;
 import com.es.core.cart.CartItem;
 import com.es.core.cart.CartPageDTO;
 import com.es.core.cart.CartService;
+import com.es.core.converters.IdToPhoneConverter;
 import com.es.core.model.phone.Phone;
 import com.es.core.model.phone.Stock;
 import com.es.core.model.phone.StockDao;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -35,6 +37,11 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 @RunWith(MockitoJUnitRunner.class)
 @WebAppConfiguration
 public class CartPageControllerTest {
+
+    private FormattingConversionService formattingConversionService;
+    private List<Phone> phones;
+    @Spy
+    private IdToPhoneConverter idToPhoneConverter = new IdToPhoneConverter();
     @Mock
     private StockDao stockDao;
     @Mock
@@ -47,6 +54,8 @@ public class CartPageControllerTest {
     private CartPageDataService cartPageDataService = new DefaultCartPageDataService();
     @InjectMocks
     private CartPageController cartPageController = new CartPageController();
+
+    private MockMvc mockMvc;
 
     @Before
     public void setup() {
@@ -63,15 +72,20 @@ public class CartPageControllerTest {
         Phone phone2 = new Phone();
         phone1.setId(1L);
         phone2.setId(2L);
-        List<Phone> phones = new ArrayList<>();
+        phones = new ArrayList<>();
         phones.add(phone1);
         phones.add(phone2);
+
+        formattingConversionService = new FormattingConversionService();
+        formattingConversionService.addConverter(idToPhoneConverter);
+        mockMvc = standaloneSetup(cartPageController)
+                .setConversionService(formattingConversionService)
+                .build();
     }
 
     @Test
     public void testGetCart() throws Exception {
         when(cartPageDataService.createCartPageData(any())).thenReturn(new CartPageDTO());
-        MockMvc mockMvc = standaloneSetup(cartPageController).build();
 
         mockMvc.perform(get("/cart"))
                 .andExpect(view().name("cartPage"))
@@ -82,12 +96,15 @@ public class CartPageControllerTest {
     public void shouldRedirectToCartIfUpdateIsSuccessful() throws Exception {
         Stock stock = new Stock();
         stock.setStock(1000);
+        doReturn(phones.get(0)).when(idToPhoneConverter).convert(eq("1"));
+        doReturn(phones.get(1)).when(idToPhoneConverter).convert(eq("2"));
+
         when(stockDao.getStock(any())).thenReturn(stock);
-        MockMvc mockMvc = standaloneSetup(cartPageController).build();
 
         mockMvc.perform(post("/cart")
                         .param("cartItems[1]", "1")
-                        .param("cartItems[2]", "1"))
+                        .param("cartItems[2]", "1")
+                        .param("cartPrice", "100"))
                 .andExpect(redirectedUrl("cart"));
     }
 
@@ -97,7 +114,8 @@ public class CartPageControllerTest {
         stock.setStock(1);
         when(stockDao.getStock(eq(1L))).thenReturn(stock);
         when(stockDao.getStock(eq(2L))).thenReturn(stock);
-        MockMvc mockMvc = standaloneSetup(cartPageController).build();
+        doReturn(phones.get(0)).when(idToPhoneConverter).convert(eq("1"));
+        doReturn(phones.get(1)).when(idToPhoneConverter).convert(eq("2"));
 
         mockMvc.perform(post("/cart")
                 .param("cartItems[1]", "100")
