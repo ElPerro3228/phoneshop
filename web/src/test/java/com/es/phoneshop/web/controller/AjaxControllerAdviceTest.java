@@ -4,8 +4,10 @@ import com.es.core.cart.CartItemValidationException;
 import com.es.core.order.OutOfStockException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.validation.Errors;
@@ -13,6 +15,7 @@ import org.springframework.validation.ObjectError;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.ArgumentMatchers.any;
@@ -30,13 +33,16 @@ public class AjaxControllerAdviceTest {
     private ObjectError error;
     @Mock
     private AjaxCartController ajaxCartController;
+    @Mock
+    private MessageSource messageSource;
+    @InjectMocks
+    private AjaxControllerAdvice ajaxControllerAdvice = new AjaxControllerAdvice();
 
     @Test
     public void shouldHandleCartItemValidationException() throws Exception {
         List<ObjectError> errorsList = new ArrayList<>();
         errorsList.add(error);
 
-        AjaxControllerAdvice ajaxControllerAdvice = new AjaxControllerAdvice();
         MockMvc mockMvc = standaloneSetup(ajaxCartController)
                 .setControllerAdvice(ajaxControllerAdvice)
                 .build();
@@ -55,11 +61,11 @@ public class AjaxControllerAdviceTest {
 
     @Test
     public void shouldHandleOutOfStockException() throws Exception {
-        AjaxControllerAdvice ajaxControllerAdvice = new AjaxControllerAdvice();
         MockMvc mockMvc = standaloneSetup(ajaxCartController)
                 .setControllerAdvice(ajaxControllerAdvice)
                 .build();
         String cartItem = "{\"phoneId\":1,\"quantity\":1}";
+        when(messageSource.getMessage(any(), any(), any(Locale.class))).thenReturn("too much");
 
         when(ajaxCartController.addPhone(any(), any())).thenThrow(new OutOfStockException("too much"));
 

@@ -9,7 +9,6 @@ import com.es.core.services.MiniCartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,12 +27,19 @@ public class AjaxCartController {
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, produces = "application/json")
-    public MiniCart addPhone(@Valid @RequestBody CartItem cartItem, Errors errors) throws OutOfStockException {
+    public MiniCart addPhone(@RequestBody @Valid CartItem cartItem, Errors errors) throws OutOfStockException {
         if (!errors.hasErrors()) {
             cartService.addPhone(cartItem.getPhoneId(), cartItem.getQuantity());
             return miniCartService.createMiniCart(cartService.getCart());
         } else {
             throw new CartItemValidationException(errors);
         }
+    }
+
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.DELETE, produces = "application/json")
+    public MiniCart deletePhone(@RequestBody @Valid CartItem cartItem) {
+        cartService.remove(cartItem.getPhoneId());
+        return miniCartService.createMiniCart(cartService.getCart());
     }
 }

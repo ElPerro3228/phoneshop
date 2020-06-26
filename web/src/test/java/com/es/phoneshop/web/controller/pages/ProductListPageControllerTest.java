@@ -33,7 +33,7 @@ public class ProductListPageControllerTest {
     @Test
     public void testShowProductList() throws Exception {
         List<Phone> expectedPhones = createProductList();
-        when(phoneService.getPhoneList(1, "ARCHOS", "price", SortOrder.ASC)).thenReturn(expectedPhones);
+        when(phoneService.getPhonesPage(1, "ARCHOS", "price", SortOrder.ASC)).thenReturn(expectedPhones);
         when(propertyService.getSortFields()).thenReturn(new ArrayList<>());
 
         MockMvc mockMvc = standaloneSetup(controller).setSingleView(

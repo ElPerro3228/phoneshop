@@ -1,13 +1,18 @@
 package com.es.core.cart;
 
+import com.es.core.model.phone.Phone;
 import com.es.core.order.OutOfStockException;
 import com.es.core.services.CartPriceCalculationService;
+import com.es.core.services.PhoneService;
 import com.es.core.validators.QuantityValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class HttpSessionCartService implements CartService {
@@ -18,6 +23,8 @@ public class HttpSessionCartService implements CartService {
     private CartPriceCalculationService cartPriceCalculationService;
     @Autowired
     private QuantityValidator quantityValidator;
+    @Autowired
+    private PhoneService phoneService;
 
     @Override
     public Cart getCart() {
@@ -39,7 +46,11 @@ public class HttpSessionCartService implements CartService {
     @Override
     public void update(Map<Long, Long> items) throws OutOfStockException {
         for (Map.Entry<Long, Long> entry : items.entrySet()) {
-            addOrUpdateCartItem(entry.getKey(), entry.getValue());
+            if (entry.getValue() != 0) {
+                addOrUpdateCartItem(entry.getKey(), entry.getValue());
+            } else {
+                remove(entry.getKey());
+            }
         }
         cart.setCartPrice(cartPriceCalculationService.calculateCartPrice(cart));
     }
@@ -47,18 +58,27 @@ public class HttpSessionCartService implements CartService {
     @Override
     public void remove(Long phoneId) {
         cart.getCartItems().removeIf(cartItem -> cartItem.getPhoneId().equals(phoneId));
+        cart.setCartPrice(cartPriceCalculationService.calculateCartPrice(cart));
     }
 
     private void addOrUpdateCartItem(Long phoneId, Long quantity) throws OutOfStockException {
         Optional<CartItem> optionalCartItem = findCartItem(phoneId);
         if (!quantityValidator.isValid(phoneId, quantity)) {
-            throw new OutOfStockException("Invalid quantity");
+            throw new OutOfStockException("out of stock", "validation.outOfStock");
         }
         if (optionalCartItem.isPresent()) {
             updateExistingItem(optionalCartItem.get(), quantity);
         } else {
             addNewItem(phoneId, quantity);
         }
+    }
+
+    @Override
+    public List<Phone> getPhones(Cart cart) {
+        List<CartItem> cartItems = cart.getCartItems();
+        return cartItems.stream()
+                .map(cartItem -> phoneService.getPhone(cartItem.getPhoneId()))
+                .collect(Collectors.toList());
     }
 
     private void updateExistingItem(CartItem cartItem, Long quantity) {

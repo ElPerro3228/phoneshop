@@ -18,7 +18,7 @@ public class PhoneServiceTest extends AbstractIntegrationTest {
     public void shouldReturnFirstTenPhonesWhichMatchSearchQueryAndHaveNotEmptyStockAndPrice() {
         String searchQuery = "ARCHOS";
         int page = 1;
-        List<Phone> phones = phoneService.getPhoneList(page, searchQuery, "price", SortOrder.ASC);
+        List<Phone> phones = phoneService.getPhonesPage(page, searchQuery, "price", SortOrder.ASC);
         assertThat(phones).hasSize(10)
                 .allMatch(phone -> phone.getPrice().doubleValue() > 0);
     }
@@ -27,5 +27,16 @@ public class PhoneServiceTest extends AbstractIntegrationTest {
     public void shouldReturnCorrectPagesNumber() {
         int pagesNumber = phoneService.getPagesNumber();
         assertThat(pagesNumber).isEqualTo(2);
+    }
+
+    @Test
+    public void shouldReturnPhoneIfPresent() {
+        Phone phone = phoneService.getPhone(1001L);
+        assertThat(phone.getId()).isEqualTo(1001L);
+    }
+
+    @Test(expected = PhoneNotFoundException.class)
+    public void shouldThrowPhoneNotFoundExceptionIfNotPresent() {
+        Phone phone = phoneService.getPhone(1L);
     }
 }

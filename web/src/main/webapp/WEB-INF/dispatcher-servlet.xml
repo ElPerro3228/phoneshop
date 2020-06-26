@@ -16,7 +16,11 @@
     <mvc:resources mapping="/js/**" location="/js/" />
     <mvc:resources mapping="/images/**" location="/images/" />
 
-    <mvc:annotation-driven conversion-service="conversionService"/>
+    <mvc:annotation-driven conversion-service="conversionService" validator="validator"/>
+
+    <mvc:interceptors>
+        <bean id="miniCartInterceptor" class="com.es.phoneshop.web.handlerinterceptors.MiniCartInterceptor"/>
+    </mvc:interceptors>
 
 
     <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
@@ -24,6 +28,7 @@
             <list>
                 <bean class="com.es.phoneshop.web.controller.converters.SortFieldConverter"/>
                 <bean class="com.es.phoneshop.web.controller.converters.SortOrderConverter"/>
+                <bean class="com.es.core.converters.IdToPhoneConverter"/>
             </list>
         </property>
     </bean>

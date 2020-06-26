@@ -27,7 +27,7 @@ public class ProductListPageController {
                                     Model model) {
         ProductPageData productPageData = new ProductPageData();
         productPageData.setSortFields(propertyService.getSortFields());
-        productPageData.setPhones(phoneService.getPhoneList(page, query, sortField, sortOrder));
+        productPageData.setPhones(phoneService.getPhonesPage(page, query, sortField, sortOrder));
         productPageData.setPagesNumber(phoneService.getPagesNumber());
         productPageData.setCurrentPage(page);
         model.addAttribute("pageBean", productPageData);
