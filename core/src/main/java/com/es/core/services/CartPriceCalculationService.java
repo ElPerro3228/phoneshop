@@ -6,4 +6,6 @@ import java.math.BigDecimal;
 
 public interface CartPriceCalculationService {
     BigDecimal calculateCartPrice(Cart cart);
+    BigDecimal calculateSubtotalPrice(Cart cart);
+    BigDecimal getDeliveryPrice();
 }

@@ -2,10 +2,12 @@ package com.es.core.model.order;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 public class Order
 {
     private Long id;
+    private UUID uuid;
     private List<OrderItem> orderItems;
     /**
      *  A sum of order item prices;
@@ -23,6 +25,40 @@ public class Order
     private String contactPhoneNo;
 
     private OrderStatus status;
+
+    public Order() {
+    }
+
+    public Order(UUID uuid, List<OrderItem> orderItems, BigDecimal subtotal, BigDecimal deliveryPrice,
+                 BigDecimal totalPrice, String firstName, String lastName, String deliveryAddress,
+                 String contactPhoneNo, OrderStatus status) {
+        this.uuid = uuid;
+        this.orderItems = orderItems;
+        this.subtotal = subtotal;
+        this.deliveryPrice = deliveryPrice;
+        this.totalPrice = totalPrice;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.deliveryAddress = deliveryAddress;
+        this.contactPhoneNo = contactPhoneNo;
+        this.status = status;
+    }
+
+    public Order(Long id, UUID uuid, List<OrderItem> orderItems, BigDecimal subtotal, BigDecimal deliveryPrice,
+                 BigDecimal totalPrice, String firstName, String lastName, String deliveryAddress,
+                 String contactPhoneNo, OrderStatus status) {
+        this.id = id;
+        this.uuid = uuid;
+        this.orderItems = orderItems;
+        this.subtotal = subtotal;
+        this.deliveryPrice = deliveryPrice;
+        this.totalPrice = totalPrice;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.deliveryAddress = deliveryAddress;
+        this.contactPhoneNo = contactPhoneNo;
+        this.status = status;
+    }
 
     public Long getId() {
         return id;
@@ -102,6 +138,14 @@ public class Order
 
     public void setStatus(OrderStatus status) {
         this.status = status;
+    }
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
     }
 }
 

@@ -56,3 +56,7 @@ insert into stocks (phoneId, stock, reserved) values (1010, 20, 9);
 insert into stocks (phoneId, stock, reserved) values (1011, 21, 10);
 insert into stocks (phoneId, stock, reserved) values (1012, 22, 0);
 insert into stocks (phoneId, stock, reserved) values (1013, 23, 1);
+
+insert into status (id, status) values (NULL, NULL);
+insert into status (id, status) values (NULL, 'DELIVERED');
+insert into status (id, status) values (NULL, 'REJECTED');

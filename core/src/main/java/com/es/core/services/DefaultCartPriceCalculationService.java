@@ -17,9 +17,19 @@ public class DefaultCartPriceCalculationService implements CartPriceCalculationS
 
     @Override
     public BigDecimal calculateCartPrice(Cart cart) {
-        BigDecimal cartPrice = cart.getCartItems().stream()
+        BigDecimal cartPrice = calculateSubtotalPrice(cart);
+        return cartPrice.add(deliveryPrice);
+    }
+
+    @Override
+    public BigDecimal calculateSubtotalPrice(Cart cart) {
+        return cart.getCartItems().stream()
                 .map(cartItem -> phoneDao.get(cartItem.getPhoneId()).get().getPrice().multiply(new BigDecimal(cartItem.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-        return cartPrice.add(deliveryPrice);
+    }
+
+    @Override
+    public BigDecimal getDeliveryPrice() {
+        return deliveryPrice;
     }
 }
