@@ -1,27 +1,44 @@
 package com.es.core.model.order;
 
+import com.es.core.constraints.PhoneNumber;
+
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
 public class Order
 {
+    @NotNull
     private Long id;
+    @NotNull
     private UUID uuid;
+    @NotNull
     private List<OrderItem> orderItems;
     /**
      *  A sum of order item prices;
      */
+    @Positive
     private BigDecimal subtotal;
+    @Positive
     private BigDecimal deliveryPrice;
     /**
      * <code>subtotal</code> + <code>deliveryPrice</code>
      */
+    @Positive
     private BigDecimal totalPrice;
 
+    @Size(min = 2, message = "{validation.name}")
     private String firstName;
+    @Size(min = 2, message = "{validation.name}")
     private String lastName;
+    @Size(min = 2, message = "{validation.address}")
     private String deliveryAddress;
+    @PhoneNumber(message = "{validation.phoneNumber}")
     private String contactPhoneNo;
 
     private OrderStatus status;

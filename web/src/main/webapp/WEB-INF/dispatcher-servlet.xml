@@ -29,6 +29,7 @@
                 <bean class="com.es.phoneshop.web.controller.converters.SortFieldConverter"/>
                 <bean class="com.es.phoneshop.web.controller.converters.SortOrderConverter"/>
                 <bean class="com.es.core.converters.IdToPhoneConverter"/>
+                <bean class="com.es.core.converters.OrderIdToOrderItemsConverter"/>
             </list>
         </property>
     </bean>

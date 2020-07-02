@@ -58,6 +58,17 @@ public class OrderServiceImpl implements OrderService {
         return order.orElseThrow(OrderNotFoundException::new);
     }
 
+    @Override
+    public Order getOrderById(Long id) {
+        Optional<Order> order = orderDao.getOrderById(id);
+        return order.orElseThrow(OrderNotFoundException::new);
+    }
+
+    @Override
+    public List<OrderItem> getOrderItems(Long id) {
+        return orderDao.getOrderItemsByOrderId(id).orElseThrow(OrderNotFoundException::new);
+    }
+
     private Order convertCartToOrder(Cart cart) {
         Order order = new Order();
         order.setUuid(UUID.randomUUID());

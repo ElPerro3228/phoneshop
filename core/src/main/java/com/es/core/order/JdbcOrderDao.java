@@ -2,11 +2,8 @@ package com.es.core.order;
 
 import com.es.core.model.order.Order;
 import com.es.core.model.order.OrderItem;
-import com.es.core.model.order.OrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -46,7 +43,7 @@ public class JdbcOrderDao implements OrderDao{
     private static final String UPDATE_ORDER = "update orders set " +
             "subtotal = :subtotal, deliveryPrice = :deliveryPrice, totalPrice = :totalPrice, firstName = :firstName, " +
             "lastName = :lastName, deliveryAddress = :deliveryAddress, contactPhoneNo = :contactPhoneNo, statusId = :statusId " +
-            "where id = :id;";
+            "where id = :id and uuid = :uuid;";
     private static final String UPDATE_ORDER_ITEM = "update orderItems set " +
             "phoneId = :phoneId, orderId = :orderId, quantity = :quantity where id = :id;";
 
@@ -78,10 +75,34 @@ public class JdbcOrderDao implements OrderDao{
 
     @Override
     public Optional<Order> getOrderByUUID(UUID uuid) {
+        return getOrderBy("uuid", uuid.toString());
+    }
+
+    @Override
+    public Optional<List<OrderItem>> getOrderItemsByOrderId(Long id) {
         try {
-            Order order = jdbcTemplate.queryForObject("select * from orders where uuid = '" + uuid.toString() + "';", orderRowMapper);
-            List<OrderItem> orderItems = jdbcTemplate.query("select * from orderItems where orderId = " + order.getId() +";", orderItemRowMapper);
+            List<OrderItem> orderItems = getOrderItems(id);
+            return Optional.of(orderItems);
+        } catch (DataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    private List<OrderItem> getOrderItems(Long id) {
+        return jdbcTemplate.query("select * from orderItems where orderId = " + id +";", orderItemRowMapper);
+    }
+
+    @Override
+    public Optional<Order> getOrderById(Long id) {
+        return getOrderBy("id", id.toString());
+    }
+
+    private Optional<Order> getOrderBy(String criteria, String value) {
+        try {
+            Order order = jdbcTemplate.queryForObject("select * from orders where " + criteria + " = '" + value + "';", orderRowMapper);
+            List<OrderItem> orderItems = getOrderItems(order.getId());
             order.setOrderItems(orderItems);
+            orderItems.forEach(orderItem -> orderItem.setOrder(order));
             return Optional.of(order);
         } catch (DataAccessException e) {
             return Optional.empty();
@@ -93,7 +114,7 @@ public class JdbcOrderDao implements OrderDao{
         sqlParameterSource.addValue("id", order.getId());
         sqlParameterSource.addValue("uuid", order.getUuid().toString());
         sqlParameterSource.addValue("subtotal", order.getSubtotal().doubleValue());
-        sqlParameterSource.addValue("deliveryPrice", order.getDeliveryAddress());
+        sqlParameterSource.addValue("deliveryPrice", order.getDeliveryPrice());
         sqlParameterSource.addValue("totalPrice", order.getTotalPrice());
         sqlParameterSource.addValue("firstName", order.getFirstName());
         sqlParameterSource.addValue("lastName", order.getLastName());

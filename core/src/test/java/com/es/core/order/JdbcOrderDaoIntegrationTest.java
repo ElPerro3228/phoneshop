@@ -45,7 +45,9 @@ public class JdbcOrderDaoIntegrationTest extends AbstractIntegrationTest {
     @Test
     public void shouldInsertOrder() {
         orderDao.saveOrder(order);
-        assertThat(order.getId()).isEqualTo(1L);
+        assertThat(order.getId())
+                .isNotNull()
+        .isGreaterThan(0L);
     }
 
     @Test

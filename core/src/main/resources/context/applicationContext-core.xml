@@ -35,8 +35,8 @@
     <bean id="stockBeanPropertyRowMapper" class="org.springframework.jdbc.core.BeanPropertyRowMapper">
         <constructor-arg name="mappedClass" value="com.es.core.model.phone.Stock"/>
     </bean>
-    <bean class="com.es.core.order.OrderItemRowMapper"/>
-    <bean class="com.es.core.order.OrderRowMapper"/>
+    <bean id="orderItemRowMapper" class="com.es.core.order.OrderItemRowMapper"/>
+    <bean id="orderRowMapper" class="com.es.core.order.OrderRowMapper"/>
 
     <bean id="properties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="locations">

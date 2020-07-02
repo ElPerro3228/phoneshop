@@ -58,7 +58,9 @@
                 <button name="update" type="submit" class="btn btn-outline-success">Update</button>
             </div>
             <div class="col-sm-6">
-                <button name="order" type="button" class="btn btn-outline-success">Order</button>
+                <a href="<c:url value="/order"/>" >
+                    <button name="order" type="button" class="btn btn-outline-success">Order</button>
+                </a>
             </div>
         </div>
     </div>
