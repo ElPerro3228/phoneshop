@@ -36,7 +36,6 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order createOrder(Cart cart) {
         Order order = convertCartToOrder(cart);
-        order.setStatus(OrderStatus.NEW);
         orderDao.saveOrder(order);
         return order;
     }
@@ -66,7 +65,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderItem> getOrderItems(Long id) {
-        return orderDao.getOrderItemsByOrderId(id).orElseThrow(OrderNotFoundException::new);
+        return orderDao.getOrderItemsByOrderId(id);
     }
 
     private Order convertCartToOrder(Cart cart) {
@@ -81,6 +80,7 @@ public class OrderServiceImpl implements OrderService {
             orderItems.add(new OrderItem(phone, order, cartItem.getQuantity()));
         }
         order.setOrderItems(orderItems);
+        order.setStatus(OrderStatus.NEW);
         return order;
     }
 }

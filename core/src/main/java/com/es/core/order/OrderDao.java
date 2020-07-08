@@ -11,5 +11,5 @@ public interface OrderDao {
     void saveOrder(Order order);
     Optional<Order> getOrderByUUID(UUID uuid);
     Optional<Order> getOrderById(Long id);
-    Optional<List<OrderItem>> getOrderItemsByOrderId(Long id);
+    List<OrderItem> getOrderItemsByOrderId(Long id);
 }

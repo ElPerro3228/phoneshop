@@ -79,13 +79,9 @@ public class JdbcOrderDao implements OrderDao{
     }
 
     @Override
-    public Optional<List<OrderItem>> getOrderItemsByOrderId(Long id) {
-        try {
-            List<OrderItem> orderItems = getOrderItems(id);
-            return Optional.of(orderItems);
-        } catch (DataAccessException e) {
-            return Optional.empty();
-        }
+    public List<OrderItem> getOrderItemsByOrderId(Long id) {
+        List<OrderItem> orderItems = getOrderItems(id);
+        return orderItems;
     }
 
     private List<OrderItem> getOrderItems(Long id) {
@@ -120,7 +116,7 @@ public class JdbcOrderDao implements OrderDao{
         sqlParameterSource.addValue("lastName", order.getLastName());
         sqlParameterSource.addValue("deliveryAddress", order.getDeliveryAddress());
         sqlParameterSource.addValue("contactPhoneNo", order.getContactPhoneNo());
-        sqlParameterSource.addValue("statusId", order.getStatus().getId());
+        sqlParameterSource.addValue("statusId", order.getStatus().toString());
         return sqlParameterSource;
     }
 

@@ -59,8 +59,7 @@ create table stocks (
 );
 
 create table status (
-    id BIGINT AUTO_INCREMENT primary key,
-    status VARCHAR(50) DEFAULT 'NEW'
+    id VARCHAR(50) DEFAULT 'NEW' primary key
 );
 
 create table orders (
@@ -73,7 +72,7 @@ create table orders (
     lastName VARCHAR(50),
     deliveryAddress VARCHAR(100),
     contactPhoneNo VARCHAR(50),
-    statusId BIGINT NOT NULL,
+    statusId VARCHAR(50) NOT NULL,
     CONSTRAINT FK_orders_orderStatusId FOREIGN KEY (statusId) REFERENCES status (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 

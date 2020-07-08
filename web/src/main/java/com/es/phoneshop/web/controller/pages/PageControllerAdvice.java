@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class PageControllerAdvice {
-    @ExceptionHandler(Exception.class)
+//    @ExceptionHandler(Exception.class)
     public String handleJdbcPhoneDaoException() {
         return "errors/errorPage";
     }

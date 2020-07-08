@@ -46,37 +46,6 @@ public class Order
     public Order() {
     }
 
-    public Order(UUID uuid, List<OrderItem> orderItems, BigDecimal subtotal, BigDecimal deliveryPrice,
-                 BigDecimal totalPrice, String firstName, String lastName, String deliveryAddress,
-                 String contactPhoneNo, OrderStatus status) {
-        this.uuid = uuid;
-        this.orderItems = orderItems;
-        this.subtotal = subtotal;
-        this.deliveryPrice = deliveryPrice;
-        this.totalPrice = totalPrice;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.deliveryAddress = deliveryAddress;
-        this.contactPhoneNo = contactPhoneNo;
-        this.status = status;
-    }
-
-    public Order(Long id, UUID uuid, List<OrderItem> orderItems, BigDecimal subtotal, BigDecimal deliveryPrice,
-                 BigDecimal totalPrice, String firstName, String lastName, String deliveryAddress,
-                 String contactPhoneNo, OrderStatus status) {
-        this.id = id;
-        this.uuid = uuid;
-        this.orderItems = orderItems;
-        this.subtotal = subtotal;
-        this.deliveryPrice = deliveryPrice;
-        this.totalPrice = totalPrice;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.deliveryAddress = deliveryAddress;
-        this.contactPhoneNo = contactPhoneNo;
-        this.status = status;
-    }
-
     public Long getId() {
         return id;
     }

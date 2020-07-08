@@ -11,20 +11,14 @@ import java.util.Map;
 
 public class OrderRowMapper extends BeanPropertyRowMapper<Order> {
 
-    private Map<Long, OrderStatus> statusMap;
-
     public OrderRowMapper() {
         super(Order.class);
-        statusMap = new HashMap<>();
-        statusMap.put(1L, OrderStatus.NEW);
-        statusMap.put(2L, OrderStatus.DELIVERED);
-        statusMap.put(3L, OrderStatus.REJECTED);
     }
 
     @Override
     public Order mapRow(ResultSet rs, int rowNumber) throws SQLException {
         Order order = super.mapRow(rs, rowNumber);
-        order.setStatus(statusMap.get(rs.getLong("statusId")));
+        order.setStatus(OrderStatus.valueOf(rs.getString("statusId")));
         return order;
     }
 }
