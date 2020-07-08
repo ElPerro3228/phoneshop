@@ -1,20 +1,15 @@
 package com.es.core.order;
 
 import com.es.core.cart.Cart;
-import com.es.core.cart.CartItem;
+import com.es.core.converters.CartToOrderConverter;
 import com.es.core.model.order.Order;
 import com.es.core.model.order.OrderItem;
-import com.es.core.model.order.OrderStatus;
-import com.es.core.model.phone.Phone;
-import com.es.core.services.CartPriceCalculationService;
-import com.es.core.services.PhoneService;
 import com.es.core.services.StockService;
 import com.es.core.validators.QuantityValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -24,10 +19,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Resource
     private OrderDao orderDao;
-    @Resource
-    private CartPriceCalculationService cartPriceCalculationService;
-    @Resource
-    private PhoneService phoneService;
+    @Autowired
+    private CartToOrderConverter cartToOrderConverter;
     @Resource
     private StockService stockService;
     @Autowired
@@ -35,7 +28,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order createOrder(Cart cart) {
-        Order order = convertCartToOrder(cart);
+        Order order = cartToOrderConverter.convert(cart);
         orderDao.saveOrder(order);
         return order;
     }
@@ -66,21 +59,5 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderItem> getOrderItems(Long id) {
         return orderDao.getOrderItemsByOrderId(id);
-    }
-
-    private Order convertCartToOrder(Cart cart) {
-        Order order = new Order();
-        order.setUuid(UUID.randomUUID());
-        order.setSubtotal(cartPriceCalculationService.calculateSubtotalPrice(cart));
-        order.setDeliveryPrice(cartPriceCalculationService.getDeliveryPrice());
-        order.setTotalPrice(cartPriceCalculationService.calculateCartPrice(cart));
-        List<OrderItem> orderItems = new ArrayList<>();
-        for(CartItem cartItem : cart.getCartItems()) {
-            Phone phone = phoneService.getPhone(cartItem.getPhoneId());
-            orderItems.add(new OrderItem(phone, order, cartItem.getQuantity()));
-        }
-        order.setOrderItems(orderItems);
-        order.setStatus(OrderStatus.NEW);
-        return order;
     }
 }
