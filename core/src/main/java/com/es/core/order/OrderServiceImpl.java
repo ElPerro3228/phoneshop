@@ -5,7 +5,6 @@ import com.es.core.converters.CartToOrderConverter;
 import com.es.core.model.order.Order;
 import com.es.core.model.order.OrderItem;
 import com.es.core.services.StockService;
-import com.es.core.validators.QuantityValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +22,6 @@ public class OrderServiceImpl implements OrderService {
     private CartToOrderConverter cartToOrderConverter;
     @Resource
     private StockService stockService;
-    @Autowired
-    private QuantityValidator quantityValidator;
 
     @Override
     public Order createOrder(Cart cart) {
@@ -34,12 +31,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void placeOrder(Order order) throws OutOfStockException {
+    public void placeOrder(Order order) {
         orderDao.saveOrder(order);
         for (OrderItem orderItem : order.getOrderItems()) {
-            if (!quantityValidator.isValid(orderItem.getPhone().getId(), orderItem.getQuantity())) {
-                throw new OutOfStockException();
-            }
             stockService.updateStock(orderItem.getPhone().getId(), orderItem.getQuantity().intValue());
         }
     }

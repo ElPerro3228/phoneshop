@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Optional;
 
 @Component
 @Transactional
@@ -22,7 +23,7 @@ public class JdbcStockDao implements StockDao {
     @Resource
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     @Autowired
-    private PhoneService phoneService;
+    private PhoneDao phoneDao;
 
     @Autowired
     @Qualifier("stockBeanPropertyRowMapper")
@@ -34,7 +35,8 @@ public class JdbcStockDao implements StockDao {
     @Override
     public Stock getStock(Long phoneId) {
         Stock stock = jdbcTemplate.queryForObject("select * from stocks where phoneId = " + phoneId + ";", stockBeanPropertyRowMapper);
-        stock.setPhone(phoneService.getPhone(phoneId));
+        Optional<Phone> phone = phoneDao.get(phoneId);
+        stock.setPhone(phone.orElseThrow(PhoneNotFoundException::new));
         return stock;
     }
 

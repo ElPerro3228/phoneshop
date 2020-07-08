@@ -2,6 +2,8 @@ package com.es.core.order;
 
 import com.es.core.cart.Cart;
 import com.es.core.cart.CartItem;
+import com.es.core.cart.CartService;
+import com.es.core.converters.CartToOrderConverter;
 import com.es.core.model.order.Order;
 import com.es.core.model.order.OrderItem;
 import com.es.core.model.order.OrderStatus;
@@ -9,6 +11,9 @@ import com.es.core.model.phone.AbstractIntegrationTest;
 import com.es.core.model.phone.StockDao;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +22,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 @Transactional
 public class OrderServiceImplIntegrationTest extends AbstractIntegrationTest {
@@ -25,6 +31,8 @@ public class OrderServiceImplIntegrationTest extends AbstractIntegrationTest {
     private OrderService orderService;
     @Autowired
     private StockDao stockDao;
+    @Autowired
+    private CartToOrderConverter cartToOrderConverter;
 
     private Cart cart;
 
@@ -36,6 +44,9 @@ public class OrderServiceImplIntegrationTest extends AbstractIntegrationTest {
         cartItems.add(new CartItem(1002L, 1L));
         cartItems.add(new CartItem(1003L, 1L));
         cart.setCartItems(cartItems);
+        CartService mockCartService = Mockito.mock(CartService.class);
+        cartToOrderConverter.setCartService(mockCartService);
+        when(mockCartService.getCart()).thenReturn(cart);
     }
 
     @Test
@@ -81,12 +92,5 @@ public class OrderServiceImplIntegrationTest extends AbstractIntegrationTest {
         assertThat(updatedOrder.getFirstName()).isEqualTo("Stas");
         assertThat(updatedOrder.getStatus()).isEqualTo(OrderStatus.DELIVERED);
         assertThat(newQuantities.toArray()).doesNotContain(oldQuantities);
-    }
-
-    @Test(expected = OutOfStockException.class)
-    public void shouldThrowOutOfStockException() throws OutOfStockException {
-        cart.getCartItems().add(new CartItem(1004L, 100L));
-        Order order = orderService.createOrder(cart);
-        orderService.placeOrder(order);
     }
 }

@@ -98,7 +98,6 @@ public class JdbcOrderDao implements OrderDao{
             Order order = jdbcTemplate.queryForObject("select * from orders where " + criteria + " = '" + value + "';", orderRowMapper);
             List<OrderItem> orderItems = getOrderItems(order.getId());
             order.setOrderItems(orderItems);
-            orderItems.forEach(orderItem -> orderItem.setOrder(order));
             return Optional.of(order);
         } catch (DataAccessException e) {
             return Optional.empty();

@@ -60,6 +60,7 @@ public class Order
 
     public void setOrderItems(List<OrderItem> orderItems) {
         this.orderItems = orderItems;
+        orderItems.forEach(orderItem -> orderItem.setOrder(this));
     }
 
     public BigDecimal getSubtotal() {
