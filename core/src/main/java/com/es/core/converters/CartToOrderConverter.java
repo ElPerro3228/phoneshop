@@ -24,7 +24,7 @@ public class CartToOrderConverter implements Converter<Cart, Order> {
     private CartPriceCalculationService cartPriceCalculationService;
     @Resource
     private PhoneService phoneService;
-
+    @Resource
     private CartService cartService;
 
     @Override

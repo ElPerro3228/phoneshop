@@ -25,9 +25,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order createOrder(Cart cart) {
-        Order order = cartToOrderConverter.convert(cart);
-        orderDao.saveOrder(order);
-        return order;
+        return cartToOrderConverter.convert(cart);
     }
 
     @Override

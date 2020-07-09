@@ -1,6 +1,9 @@
 package com.es.core.model.order;
 
 import com.es.core.constraints.PhoneNumber;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
@@ -13,11 +16,9 @@ import java.util.UUID;
 
 public class Order
 {
-    @NotNull
+
     private Long id;
-    @NotNull
     private UUID uuid;
-    @NotNull
     private List<OrderItem> orderItems;
     /**
      *  A sum of order item prices;

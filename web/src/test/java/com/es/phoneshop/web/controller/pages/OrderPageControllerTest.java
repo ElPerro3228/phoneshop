@@ -2,7 +2,6 @@ package com.es.phoneshop.web.controller.pages;
 
 import com.es.core.cart.Cart;
 import com.es.core.cart.CartService;
-import com.es.core.converters.OrderIdToOrderItemsConverter;
 import com.es.core.model.order.Order;
 import com.es.core.order.OrderService;
 import com.es.core.validators.OrderItemsValidator;
@@ -33,8 +32,6 @@ public class OrderPageControllerTest {
     private CartService cartService;
     @Mock
     private OrderItemsValidator orderItemsValidator;
-    @Mock
-    private OrderIdToOrderItemsConverter orderIdToOrderItemsConverter;
     @InjectMocks
     private OrderPageController orderPageController;
 
@@ -49,11 +46,8 @@ public class OrderPageControllerTest {
         when(cartService.getCart()).thenReturn(cart);
         when(orderService.createOrder(eq(cart))).thenReturn(new Order());
 
-        FormattingConversionService formattingConversionService = new FormattingConversionService();
-        formattingConversionService.addConverter(orderIdToOrderItemsConverter);
         mockMvc = standaloneSetup(orderPageController)
                 .setViewResolvers(viewResolver)
-                .setConversionService(formattingConversionService)
                 .build();
     }
 
@@ -66,12 +60,11 @@ public class OrderPageControllerTest {
 
     @Test
     public void testPlaceOrder() throws Exception {
-        when(orderIdToOrderItemsConverter.convert(eq("1"))).thenReturn(new ArrayList<>());
         String uuid = UUID.randomUUID().toString();
         mockMvc.perform(post("/order")
+                .sessionAttr("orderItems", new ArrayList<>())
                 .param("id", "1")
                 .param("uuid", uuid)
-                .param("orderItems", "1")
                 .param("subtotal", "1")
                 .param("deliveryPrice", "1")
                 .param("totalPrice", "1")
@@ -85,11 +78,10 @@ public class OrderPageControllerTest {
 
     @Test
     public void shouldRejectOrder() throws Exception {
-        when(orderIdToOrderItemsConverter.convert(eq("1"))).thenReturn(new ArrayList<>());
         mockMvc.perform(post("/order")
+                .sessionAttr("orderItems", new ArrayList<>())
                 .param("id", "1")
                 .param("uuid", "1")
-                .param("orderItems", "1")
                 .param("subtotal", "1")
                 .param("deliveryPrice", "1")
                 .param("totalPrice", "1")

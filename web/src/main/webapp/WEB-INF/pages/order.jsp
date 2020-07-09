@@ -24,7 +24,6 @@
 
     </div>
     <sf:form method="post" modelAttribute="order">
-        <sf:input path="orderItems" value="${order.id}" type="hidden"/>
         <sf:input path="id" value="${order.id}" type="hidden"/>
         <sf:input path="uuid" value="${order.uuid}" type="hidden"/>
         <sf:input path="status" value="${order.status}" type="hidden"/>

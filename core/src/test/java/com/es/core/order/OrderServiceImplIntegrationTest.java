@@ -50,8 +50,9 @@ public class OrderServiceImplIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void shouldCreateOrder() {
+    public void shouldCreateOrder() throws OutOfStockException {
         Order order = orderService.createOrder(cart);
+        orderService.placeOrder(order);
         assertThat(order).isNotNull();
         assertThat(order.getId())
                 .isNotNull()
@@ -59,8 +60,9 @@ public class OrderServiceImplIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void shouldReturnNotNullOrder() {
+    public void shouldReturnNotNullOrder() throws OutOfStockException {
         Order order = orderService.createOrder(cart);
+        orderService.placeOrder(order);
         Order returnedOrder = orderService.getOrderByUUID(order.getUuid());
         assertThat(returnedOrder.getId()).isEqualTo(order.getId());
         assertThat(returnedOrder.getUuid())
