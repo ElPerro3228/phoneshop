@@ -60,9 +60,11 @@ public class OrderPageControllerTest {
 
     @Test
     public void testPlaceOrder() throws Exception {
+        Order order = new Order();
+        order.setOrderItems(new ArrayList<>());
         String uuid = UUID.randomUUID().toString();
         mockMvc.perform(post("/order")
-                .sessionAttr("orderItems", new ArrayList<>())
+                .sessionAttr("sessionOrder", order)
                 .param("id", "1")
                 .param("uuid", uuid)
                 .param("subtotal", "1")
@@ -78,8 +80,10 @@ public class OrderPageControllerTest {
 
     @Test
     public void shouldRejectOrder() throws Exception {
+        Order order = new Order();
+        order.setOrderItems(new ArrayList<>());
         mockMvc.perform(post("/order")
-                .sessionAttr("orderItems", new ArrayList<>())
+                .sessionAttr("sessionOrder", order)
                 .param("id", "1")
                 .param("uuid", "1")
                 .param("subtotal", "1")

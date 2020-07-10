@@ -21,6 +21,11 @@ public class OrderItem {
         this.quantity = quantity;
     }
 
+    public OrderItem(Phone phone, Long quantity) {
+        this.phone = phone;
+        this.quantity = quantity;
+    }
+
     public OrderItem() {
     }
 

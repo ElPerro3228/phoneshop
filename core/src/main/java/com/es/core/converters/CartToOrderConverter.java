@@ -9,6 +9,7 @@ import com.es.core.model.order.OrderStatus;
 import com.es.core.model.phone.Phone;
 import com.es.core.services.CartPriceCalculationService;
 import com.es.core.services.PhoneService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
@@ -23,9 +24,9 @@ public class CartToOrderConverter implements Converter<Cart, Order> {
     @Resource
     private CartPriceCalculationService cartPriceCalculationService;
     @Resource
-    private PhoneService phoneService;
-    @Resource
     private CartService cartService;
+    @Autowired
+    private CartItemsToOrderItemsConverter cartItemsToOrderItemsConverter;
 
     @Override
     public Order convert(Cart cart) {
@@ -34,11 +35,7 @@ public class CartToOrderConverter implements Converter<Cart, Order> {
         order.setSubtotal(cartPriceCalculationService.calculateSubtotalPrice(cart));
         order.setDeliveryPrice(cartPriceCalculationService.getDeliveryPrice());
         order.setTotalPrice(cartService.getCart().getCartPrice());
-        List<OrderItem> orderItems = new ArrayList<>();
-        for(CartItem cartItem : cart.getCartItems()) {
-            Phone phone = phoneService.getPhone(cartItem.getPhoneId());
-            orderItems.add(new OrderItem(phone, order, cartItem.getQuantity()));
-        }
+        List<OrderItem> orderItems = cartItemsToOrderItemsConverter.convert(cart.getCartItems());
         order.setOrderItems(orderItems);
         order.setStatus(OrderStatus.NEW);
         return order;

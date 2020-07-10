@@ -23,7 +23,7 @@ import java.util.List;
 @RequestMapping(value = "/order")
 public class OrderPageController {
 
-    private static final String ORDER_ITEMS_SESSION_NAME = "orderItems";
+    private static final String ORDER_SESSION_NAME = "sessionOrder";
 
     @Resource
     private OrderService orderService;
@@ -35,20 +35,28 @@ public class OrderPageController {
     @RequestMapping(method = RequestMethod.GET)
     public String getOrder(Model model, HttpSession session) throws OutOfStockException {
         Cart cart = cartService.getCart();
-        Order order = orderService.createOrder(cart);
-        session.setAttribute(ORDER_ITEMS_SESSION_NAME, order.getOrderItems());
+        Order order;
+        if(session.getAttribute(ORDER_SESSION_NAME) == null) {
+            order = orderService.createOrder(cart);
+            session.setAttribute(ORDER_SESSION_NAME, order);
+        } else {
+            Order sessionOrder = (Order) session.getAttribute(ORDER_SESSION_NAME);
+            order = orderService.updateOrderItems(cart, sessionOrder);
+        }
         model.addAttribute("order", order);
         return "order";
     }
 
     @RequestMapping(method = RequestMethod.POST)
     public String placeOrder(@Valid @ModelAttribute("order") Order order, Errors errors, HttpSession session) throws OutOfStockException {
-        order.setOrderItems((List<OrderItem>) session.getAttribute(ORDER_ITEMS_SESSION_NAME));
+        Order sessionOrder = (Order) session.getAttribute(ORDER_SESSION_NAME);
+        order.setOrderItems(sessionOrder.getOrderItems());
         orderItemsValidator.validate(order, errors);
         if (errors.hasErrors()) {
             return "order";
         }
         orderService.placeOrder(order);
+        session.removeAttribute(ORDER_SESSION_NAME);
         return "redirect:orderOverview/" + order.getUuid().toString();
     }
 }

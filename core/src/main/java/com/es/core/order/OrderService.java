@@ -9,6 +9,7 @@ import java.util.UUID;
 
 public interface OrderService {
     Order createOrder(Cart cart);
+    Order updateOrderItems(Cart cart, Order order);
     void placeOrder(Order order) throws OutOfStockException;
     Order getOrderByUUID(UUID uuid);
     Order getOrderById(Long id);
