@@ -1,9 +1,6 @@
 package com.es.core.model.phone;
 
-import com.es.core.services.PhoneService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -12,7 +9,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.Optional;
 
 @Component
 @Transactional
@@ -22,22 +18,16 @@ public class JdbcStockDao implements StockDao {
     private JdbcTemplate jdbcTemplate;
     @Resource
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    @Autowired
-    private PhoneDao phoneDao;
 
     @Autowired
-    @Qualifier("stockBeanPropertyRowMapper")
-    private BeanPropertyRowMapper<Stock> stockBeanPropertyRowMapper;
+    private StockRowMapper stockRowMapper;
 
     private static final String UPDATE_QUERY = "update stocks set stock = :stock, reserved = :reserved " +
             "where phoneId = :phoneId;";
 
     @Override
     public Stock getStock(Long phoneId) {
-        Stock stock = jdbcTemplate.queryForObject("select * from stocks where phoneId = " + phoneId + ";", stockBeanPropertyRowMapper);
-        Optional<Phone> phone = phoneDao.get(phoneId);
-        stock.setPhone(phone.orElseThrow(PhoneNotFoundException::new));
-        return stock;
+        return jdbcTemplate.queryForObject("select * from stocks where phoneId = " + phoneId + ";", stockRowMapper);
     }
 
     @Override

@@ -18,6 +18,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -62,19 +63,15 @@ public class OrderPageControllerTest {
     public void testPlaceOrder() throws Exception {
         Order order = new Order();
         order.setOrderItems(new ArrayList<>());
-        String uuid = UUID.randomUUID().toString();
+        UUID uuid = UUID.randomUUID();
+        order.setUuid(uuid);
+        when(orderService.createOrder(any(Cart.class))).thenReturn(order);
         mockMvc.perform(post("/order")
                 .sessionAttr("sessionOrder", order)
-                .param("id", "1")
-                .param("uuid", uuid)
-                .param("subtotal", "1")
-                .param("deliveryPrice", "1")
-                .param("totalPrice", "1")
                 .param("firstName", "1")
                 .param("lastName", "1")
                 .param("deliveryAddress", "1")
-                .param("contactPhoneNo", "1")
-                .param("status", "NEW"))
+                .param("contactPhoneNo", "1"))
                 .andExpect(redirectedUrl("orderOverview/" + uuid));
     }
 

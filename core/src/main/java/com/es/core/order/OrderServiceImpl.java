@@ -1,22 +1,19 @@
 package com.es.core.order;
 
 import com.es.core.cart.Cart;
-import com.es.core.cart.CartItem;
-import com.es.core.converters.CartItemsToOrderItemsConverter;
+import com.es.core.converters.CartItemToOrderItemConverter;
 import com.es.core.converters.CartToOrderConverter;
 import com.es.core.model.order.Order;
 import com.es.core.model.order.OrderItem;
-import com.es.core.model.phone.Phone;
-import com.es.core.services.PhoneService;
 import com.es.core.services.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -28,7 +25,7 @@ public class OrderServiceImpl implements OrderService {
     @Resource
     private StockService stockService;
     @Autowired
-    private CartItemsToOrderItemsConverter cartItemsToOrderItemsConverter;
+    private CartItemToOrderItemConverter cartItemToOrderItemConverter;
 
     @Override
     public Order createOrder(Cart cart) {
@@ -37,7 +34,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order updateOrderItems(Cart cart, Order order) {
-        List<OrderItem> orderItems = cartItemsToOrderItemsConverter.convert(cart.getCartItems());
+        List<OrderItem> orderItems = cart.getCartItems().stream()
+                .map(cartItem -> cartItemToOrderItemConverter.convert(cartItem))
+                .collect(Collectors.toList());
         order.setOrderItems(orderItems);
         return order;
     }
