@@ -29,7 +29,6 @@ public class CartToOrderConverter implements Converter<Cart, Order> {
     public Order convert(Cart cart) {
         Order order = new Order();
         order.setUuid(UUID.randomUUID());
-        cart.setCartPrice(cartPriceCalculationService.calculateCartPrice(cart));
         order.setSubtotal(cart.getCartPrice());
         order.setDeliveryPrice(cartPriceCalculationService.getDeliveryPrice());
         order.setTotalPrice(cartPriceCalculationService.calculateTotalPrice(cart));
