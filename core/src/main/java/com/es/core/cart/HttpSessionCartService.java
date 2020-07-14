@@ -8,7 +8,6 @@ import com.es.core.validators.QuantityValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -34,7 +33,7 @@ public class HttpSessionCartService implements CartService {
     @Override
     public void addPhone(Long phoneId, Long quantity) throws OutOfStockException {
         addOrUpdateCartItem(phoneId, quantity);
-        cart.setCartPrice(cartPriceCalculationService.calculateCartPrice(cart));
+        cart.setCartPrice(cartPriceCalculationService.calculateTotalPrice(cart));
     }
 
     private Optional<CartItem> findCartItem(Long phoneId) {
@@ -52,13 +51,13 @@ public class HttpSessionCartService implements CartService {
                 remove(entry.getKey());
             }
         }
-        cart.setCartPrice(cartPriceCalculationService.calculateCartPrice(cart));
+        cart.setCartPrice(cartPriceCalculationService.calculateTotalPrice(cart));
     }
 
     @Override
     public void remove(Long phoneId) {
         cart.getCartItems().removeIf(cartItem -> cartItem.getPhoneId().equals(phoneId));
-        cart.setCartPrice(cartPriceCalculationService.calculateCartPrice(cart));
+        cart.setCartPrice(cartPriceCalculationService.calculateTotalPrice(cart));
     }
 
     private void addOrUpdateCartItem(Long phoneId, Long quantity) throws OutOfStockException {

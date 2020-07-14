@@ -16,13 +16,13 @@ public class DefaultCartPriceCalculationService implements CartPriceCalculationS
     private PhoneDao phoneDao;
 
     @Override
-    public BigDecimal calculateCartPrice(Cart cart) {
-        BigDecimal cartPrice = calculateSubtotalPrice(cart);
+    public BigDecimal calculateTotalPrice(Cart cart) {
+        BigDecimal cartPrice = calculateCartPrice(cart);
         return cartPrice.add(deliveryPrice);
     }
 
     @Override
-    public BigDecimal calculateSubtotalPrice(Cart cart) {
+    public BigDecimal calculateCartPrice(Cart cart) {
         return cart.getCartItems().stream()
                 .map(cartItem -> phoneDao.get(cartItem.getPhoneId()).get().getPrice().multiply(new BigDecimal(cartItem.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);

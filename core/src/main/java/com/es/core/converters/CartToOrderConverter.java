@@ -30,9 +30,9 @@ public class CartToOrderConverter implements Converter<Cart, Order> {
         Order order = new Order();
         order.setUuid(UUID.randomUUID());
         cart.setCartPrice(cartPriceCalculationService.calculateCartPrice(cart));
-        order.setSubtotal(cartPriceCalculationService.calculateSubtotalPrice(cart));
+        order.setSubtotal(cart.getCartPrice());
         order.setDeliveryPrice(cartPriceCalculationService.getDeliveryPrice());
-        order.setTotalPrice(cart.getCartPrice());
+        order.setTotalPrice(cartPriceCalculationService.calculateTotalPrice(cart));
         List<OrderItem> orderItems = cart.getCartItems().stream()
                 .map(cartItem -> cartItemToOrderItemConverter.convert(cartItem))
                 .collect(Collectors.toList());

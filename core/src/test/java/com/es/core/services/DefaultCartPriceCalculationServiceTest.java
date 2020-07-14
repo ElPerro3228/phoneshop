@@ -25,7 +25,7 @@ public class DefaultCartPriceCalculationServiceTest extends AbstractIntegrationT
         testCart.getCartItems().add(new CartItem(1001L, 2L));
         testCart.getCartItems().add(new CartItem(1002L, 2L));
 
-        BigDecimal price = cartPriceCalculationService.calculateCartPrice(testCart);
+        BigDecimal price = cartPriceCalculationService.calculateTotalPrice(testCart);
 
         assertThat(price).isEqualTo("55.0");
     }

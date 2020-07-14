@@ -5,7 +5,7 @@ import com.es.core.cart.Cart;
 import java.math.BigDecimal;
 
 public interface CartPriceCalculationService {
+    BigDecimal calculateTotalPrice(Cart cart);
     BigDecimal calculateCartPrice(Cart cart);
-    BigDecimal calculateSubtotalPrice(Cart cart);
     BigDecimal getDeliveryPrice();
 }
