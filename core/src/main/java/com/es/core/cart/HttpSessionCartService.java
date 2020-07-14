@@ -33,7 +33,7 @@ public class HttpSessionCartService implements CartService {
     @Override
     public void addPhone(Long phoneId, Long quantity) throws OutOfStockException {
         addOrUpdateCartItem(phoneId, quantity);
-        cart.setCartPrice(cartPriceCalculationService.calculateTotalPrice(cart));
+        cart.setCartPrice(cartPriceCalculationService.calculateCartPrice(cart));
     }
 
     private Optional<CartItem> findCartItem(Long phoneId) {
@@ -51,13 +51,13 @@ public class HttpSessionCartService implements CartService {
                 remove(entry.getKey());
             }
         }
-        cart.setCartPrice(cartPriceCalculationService.calculateTotalPrice(cart));
+        cart.setCartPrice(cartPriceCalculationService.calculateCartPrice(cart));
     }
 
     @Override
     public void remove(Long phoneId) {
         cart.getCartItems().removeIf(cartItem -> cartItem.getPhoneId().equals(phoneId));
-        cart.setCartPrice(cartPriceCalculationService.calculateTotalPrice(cart));
+        cart.setCartPrice(cartPriceCalculationService.calculateCartPrice(cart));
     }
 
     private void addOrUpdateCartItem(Long phoneId, Long quantity) throws OutOfStockException {
