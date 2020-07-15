@@ -37,11 +37,7 @@ public class OrderPageController {
     @RequestMapping(method = RequestMethod.GET)
     public String getOrder(Model model) throws OutOfStockException {
         Cart cart = cartService.getCart();
-        List<OrderItem> orderItems = cart.getCartItems().stream()
-                .map(cartItem -> cartItemToOrderItemConverter.convert(cartItem))
-                .collect(Collectors.toList());
-        Order order = new Order();
-        order.setOrderItems(orderItems);
+        Order order = orderService.createOrder(cart);
         model.addAttribute("order", order);
         return "order";
     }
