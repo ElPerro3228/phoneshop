@@ -11,6 +11,7 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -28,10 +29,11 @@ public class CartToOrderConverter implements Converter<Cart, Order> {
     @Override
     public Order convert(Cart cart) {
         Order order = new Order();
+        BigDecimal deliveryPrice = cartPriceCalculationService.getDeliveryPrice();
         order.setUuid(UUID.randomUUID());
         order.setSubtotal(cart.getCartPrice());
-        order.setDeliveryPrice(cartPriceCalculationService.getDeliveryPrice());
-        order.setTotalPrice(cartPriceCalculationService.calculateTotalPrice(cart));
+        order.setDeliveryPrice(deliveryPrice);
+        order.setTotalPrice(cart.getCartPrice().add(deliveryPrice));
         List<OrderItem> orderItems = cart.getCartItems().stream()
                 .map(cartItem -> cartItemToOrderItemConverter.convert(cartItem))
                 .collect(Collectors.toList());
