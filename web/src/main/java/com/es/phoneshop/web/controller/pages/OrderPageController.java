@@ -2,13 +2,14 @@ package com.es.phoneshop.web.controller.pages;
 
 import com.es.core.cart.Cart;
 import com.es.core.cart.CartService;
-import com.es.core.converters.CartItemToOrderItemConverter;
 import com.es.core.model.order.Order;
-import com.es.core.model.order.OrderItem;
 import com.es.core.order.OrderService;
 import com.es.core.order.OutOfStockException;
+import com.es.core.services.CartPageDataService;
+import com.es.core.services.CartPriceCalculationService;
 import com.es.core.validators.OrderItemsValidator;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -18,8 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.math.BigDecimal;
 
 @Controller
 @RequestMapping(value = "/order")
@@ -31,14 +31,22 @@ public class OrderPageController {
     private CartService cartService;
     @Resource
     private OrderItemsValidator orderItemsValidator;
-    @Autowired
-    private CartItemToOrderItemConverter cartItemToOrderItemConverter;
+    @Resource
+    private CartPriceCalculationService cartPriceCalculationService;
+    @Resource
+    private CartPageDataService cartPageDataService;
+
+    private static final Logger logger = LoggerFactory.getLogger(OrderPageController.class);
 
     @RequestMapping(method = RequestMethod.GET)
     public String getOrder(Model model) throws OutOfStockException {
         Cart cart = cartService.getCart();
-        Order order = orderService.createOrder(cart);
-        model.addAttribute("order", order);
+        BigDecimal deliveryPrice = cartPriceCalculationService.getDeliveryPrice();
+        model.addAttribute("cartDTO", cartPageDataService.createCartPageData(cart));
+        model.addAttribute("deliveryPrice", deliveryPrice);
+        model.addAttribute("subtotalPrice", cart.getCartPrice());
+        model.addAttribute("totalPrice", cart.getCartPrice().add(deliveryPrice));
+        model.addAttribute("order", new Order());
         return "order";
     }
 
@@ -52,6 +60,7 @@ public class OrderPageController {
             return "order";
         }
         orderService.placeOrder(order);
+        logger.info("order {} was saved", order.getId());
         return "redirect:orderOverview/" + order.getUuid().toString();
     }
 

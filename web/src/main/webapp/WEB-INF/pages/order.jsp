@@ -24,8 +24,6 @@
 
     </div>
     <sf:form method="post" modelAttribute="order">
-        <sf:input path="uuid" value="${order.uuid}" type="hidden"/>
-        <sf:input path="status" value="${order.status}" type="hidden"/>
         <div style="color: red">
             <sf:errors path="orderItems"/>
         </div>
@@ -39,13 +37,13 @@
                 <td>Action</td>
             </tr>
             </thead>
-            <c:forEach var="orderItem" items="${order.orderItems}" varStatus="status">
+            <c:forEach var="cartItem" items="${cartDTO.cartItems.entrySet()}" varStatus="status">
                 <tr class="cart-item">
-                    <td>${orderItem.phone.brand}</td>
-                    <td><a href="<c:url value="productDetails/${orderItem.phone.id}"/>">${orderItem.phone.model}</a></td>
-                    <td> <fmt:formatNumber value="${orderItem.phone.price}" type="currency" currencySymbol="$"/> </td>
+                    <td>${cartItem.key.brand}</td>
+                    <td><a href="<c:url value="productDetails/${cartItem.key.id}"/>">${cartItem.key.model}</a></td>
+                    <td> <fmt:formatNumber value="${cartItem.key.price}" type="currency" currencySymbol="$"/> </td>
                     <td>
-                        <c:out value="${orderItem.quantity}"/>
+                        <c:out value="${cartItem.value}"/>
                     </td>
                 </tr>
             </c:forEach>
@@ -53,16 +51,16 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-4">
-                    Subtotal price: <fmt:formatNumber value="${order.subtotal}" type="currency" currencySymbol="$"/>
-                    <sf:input path="subtotal" value="${order.subtotal}" type="hidden"/>
+                    Subtotal price: <fmt:formatNumber value="${subtotalPrice}" type="currency" currencySymbol="$"/>
+                    <sf:input path="subtotal" value="${subtotalPrice}" type="hidden"/>
                 </div>
                 <div class="col-sm-4">
-                    Delivery price: <fmt:formatNumber value="${order.deliveryPrice}" type="currency" currencySymbol="$"/>
-                    <sf:input path="deliveryPrice" value="${order.deliveryPrice}" type="hidden"/>
+                    Delivery price: <fmt:formatNumber value="${deliveryPrice}" type="currency" currencySymbol="$"/>
+                    <sf:input path="deliveryPrice" value="${deliveryPrice}" type="hidden"/>
                 </div>
                 <div class="col-sm-4">
-                    Total price: <fmt:formatNumber value="${order.totalPrice}" type="currency" currencySymbol="$"/>
-                    <sf:input path="totalPrice" value="${order.totalPrice}" type="hidden"/>
+                    Total price: <fmt:formatNumber value="${totalPrice}" type="currency" currencySymbol="$"/>
+                    <sf:input path="totalPrice" value="${totalPrice}" type="hidden"/>
                 </div>
             </div>
             <div class="row">
