@@ -1,12 +1,11 @@
 package com.es.phoneshop.web.controller.pages;
 
 import com.es.core.cart.Cart;
-import com.es.core.cart.CartPageDTO;
+import com.es.core.cart.CartDTO;
 import com.es.core.cart.CartService;
 import com.es.core.model.order.Order;
 import com.es.core.order.OrderService;
 import com.es.core.services.CartPageDataService;
-import com.es.core.services.CartPriceCalculationService;
 import com.es.core.validators.OrderItemsValidator;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,11 +13,9 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.format.support.FormattingConversionService;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -60,7 +57,7 @@ public class OrderPageControllerTest {
 
     @Test
     public void testGetOrder() throws Exception {
-        when(cartPageDataService.createCartPageData(any(Cart.class))).thenReturn(new CartPageDTO());
+        when(cartPageDataService.createCartPageData(any(Cart.class))).thenReturn(new CartDTO());
         mockMvc.perform(get("/order"))
                 .andExpect(view().name("order"))
                 .andExpect(model().attributeExists("order"));

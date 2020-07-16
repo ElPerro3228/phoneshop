@@ -1,9 +1,8 @@
 package com.es.phoneshop.web.controller.pages;
 
 import com.es.core.cart.Cart;
-import com.es.core.cart.CartPageDTO;
+import com.es.core.cart.CartDTO;
 import com.es.core.cart.CartService;
-import com.es.core.model.phone.Phone;
 import com.es.core.order.OutOfStockException;
 import com.es.core.services.CartPageDataService;
 import com.es.core.validators.CartPageDataValidator;
@@ -28,15 +27,15 @@ public class CartPageController {
     @RequestMapping(method = RequestMethod.GET)
     public String getCart(Model model) {
         Cart cart = cartService.getCart();
-        model.addAttribute("cartPageDTO", cartPageDataService.createCartPageData(cart));
+        model.addAttribute("cartDTO", cartPageDataService.createCartPageData(cart));
         return "cartPage";
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public String updateCart(CartPageDTO cartPageDTO, Model model, Errors errors) throws OutOfStockException {
-        cartPageDataValidator.validate(cartPageDTO, errors);
+    public String updateCart(CartDTO cartDTO, Model model, Errors errors) throws OutOfStockException {
+        cartPageDataValidator.validate(cartDTO, errors);
         if (!errors.hasErrors()) {
-            cartService.update(cartPageDataService.convert(cartPageDTO.getCartItems()));
+            cartService.update(cartPageDataService.convert(cartDTO.getCartItems()));
             return "redirect:cart";
         }
         return "cartPage";

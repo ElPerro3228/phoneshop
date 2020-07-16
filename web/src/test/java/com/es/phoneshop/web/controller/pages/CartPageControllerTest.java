@@ -1,8 +1,8 @@
 package com.es.phoneshop.web.controller.pages;
 
 import com.es.core.cart.Cart;
+import com.es.core.cart.CartDTO;
 import com.es.core.cart.CartItem;
-import com.es.core.cart.CartPageDTO;
 import com.es.core.cart.CartService;
 import com.es.core.converters.IdToPhoneConverter;
 import com.es.core.model.phone.Phone;
@@ -19,7 +19,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.format.support.FormattingConversionService;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -85,7 +84,7 @@ public class CartPageControllerTest {
 
     @Test
     public void testGetCart() throws Exception {
-        when(cartPageDataService.createCartPageData(any())).thenReturn(new CartPageDTO());
+        when(cartPageDataService.createCartPageData(any())).thenReturn(new CartDTO());
 
         mockMvc.perform(get("/cart"))
                 .andExpect(view().name("cartPage"))
@@ -121,8 +120,8 @@ public class CartPageControllerTest {
                 .param("cartItems[1]", "100")
                 .param("cartItems[2]", "-1"))
                 .andExpect(view().name("cartPage"))
-                .andExpect(model().attributeHasFieldErrors("cartPageDTO", "cartItems[1]", "cartItems[2]"))
-                .andExpect(model().attributeHasFieldErrorCode("cartPageDTO", "cartItems[1]", "validation.outOfStock"))
-                .andExpect(model().attributeHasFieldErrorCode("cartPageDTO", "cartItems[2]", "validation.cartpage.quantity"));
+                .andExpect(model().attributeHasFieldErrors("cartDTO", "cartItems[1]", "cartItems[2]"))
+                .andExpect(model().attributeHasFieldErrorCode("cartDTO", "cartItems[1]", "validation.outOfStock"))
+                .andExpect(model().attributeHasFieldErrorCode("cartDTO", "cartItems[2]", "validation.cartpage.quantity"));
     }
 }

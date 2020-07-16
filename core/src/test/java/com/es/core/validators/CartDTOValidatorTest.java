@@ -1,6 +1,6 @@
 package com.es.core.validators;
 
-import com.es.core.cart.CartPageDTO;
+import com.es.core.cart.CartDTO;
 import com.es.core.model.phone.AbstractIntegrationTest;
 import com.es.core.model.phone.Phone;
 import org.junit.Test;
@@ -14,7 +14,7 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CartPageDTOValidatorTest extends AbstractIntegrationTest {
+public class CartDTOValidatorTest extends AbstractIntegrationTest {
     @Autowired
     private CartPageDataValidator cartPageDataValidator;
     @Autowired
@@ -29,12 +29,12 @@ public class CartPageDTOValidatorTest extends AbstractIntegrationTest {
         phone2.setId(1002L);
         cartItems.put(phone1, 1L);
         cartItems.put(phone2, 1L);
-        CartPageDTO cartPageDTO = new CartPageDTO();
-        cartPageDTO.setCartItems(cartItems);
-        BeanPropertyBindingResult beanPropertyBindingResult = new BeanPropertyBindingResult(cartPageDTO, "cartPageDTO");
+        CartDTO cartDTO = new CartDTO();
+        cartDTO.setCartItems(cartItems);
+        BeanPropertyBindingResult beanPropertyBindingResult = new BeanPropertyBindingResult(cartDTO, "cartDTO");
         beanPropertyBindingResult.initConversion(conversionService);
         Errors errors = beanPropertyBindingResult;
-        cartPageDataValidator.validate(cartPageDTO, errors);
+        cartPageDataValidator.validate(cartDTO, errors);
 
         assertThat(errors.hasErrors()).isFalse();
     }
@@ -48,12 +48,12 @@ public class CartPageDTOValidatorTest extends AbstractIntegrationTest {
         phone2.setId(1002L);
         cartItems.put(phone1, -1L);
         cartItems.put(phone2, 1L);
-        CartPageDTO cartPageDTO = new CartPageDTO();
-        cartPageDTO.setCartItems(cartItems);
-        BeanPropertyBindingResult beanPropertyBindingResult = new BeanPropertyBindingResult(cartPageDTO, "cartPageDTO");
+        CartDTO cartDTO = new CartDTO();
+        cartDTO.setCartItems(cartItems);
+        BeanPropertyBindingResult beanPropertyBindingResult = new BeanPropertyBindingResult(cartDTO, "cartDTO");
         beanPropertyBindingResult.initConversion(conversionService);
         Errors errors = beanPropertyBindingResult;
-        cartPageDataValidator.validate(cartPageDTO, errors);
+        cartPageDataValidator.validate(cartDTO, errors);
 
         assertThat(errors.hasErrors()).isTrue();
         assertThat(errors.getFieldError("cartItems[1001]")).isNotNull();
@@ -70,12 +70,12 @@ public class CartPageDTOValidatorTest extends AbstractIntegrationTest {
         phone2.setId(1002L);
         cartItems.put(phone1, 1000L);
         cartItems.put(phone2, 1L);
-        CartPageDTO cartPageDTO = new CartPageDTO();
-        cartPageDTO.setCartItems(cartItems);
-        BeanPropertyBindingResult beanPropertyBindingResult = new BeanPropertyBindingResult(cartPageDTO, "cartPageDTO");
+        CartDTO cartDTO = new CartDTO();
+        cartDTO.setCartItems(cartItems);
+        BeanPropertyBindingResult beanPropertyBindingResult = new BeanPropertyBindingResult(cartDTO, "cartDTO");
         beanPropertyBindingResult.initConversion(conversionService);
         Errors errors = beanPropertyBindingResult;
-        cartPageDataValidator.validate(cartPageDTO, errors);
+        cartPageDataValidator.validate(cartDTO, errors);
 
         assertThat(errors.hasErrors()).isTrue();
         assertThat(errors.getFieldError("cartItems[1001]")).isNotNull();
@@ -92,12 +92,12 @@ public class CartPageDTOValidatorTest extends AbstractIntegrationTest {
         phone2.setId(1002L);
         cartItems.put(phone1, 1000L);
         cartItems.put(phone2, -1L);
-        CartPageDTO cartPageDTO = new CartPageDTO();
-        cartPageDTO.setCartItems(cartItems);
-        BeanPropertyBindingResult beanPropertyBindingResult = new BeanPropertyBindingResult(cartPageDTO, "cartPageDTO");
+        CartDTO cartDTO = new CartDTO();
+        cartDTO.setCartItems(cartItems);
+        BeanPropertyBindingResult beanPropertyBindingResult = new BeanPropertyBindingResult(cartDTO, "cartDTO");
         beanPropertyBindingResult.initConversion(conversionService);
         Errors errors = beanPropertyBindingResult;
-        cartPageDataValidator.validate(cartPageDTO, errors);
+        cartPageDataValidator.validate(cartDTO, errors);
 
         assertThat(errors.hasErrors()).isTrue();
         assertThat(errors.getFieldErrorCount()).isEqualTo(2);

@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-public class CartPageDTO implements Serializable {
+public class CartDTO implements Serializable {
 
     private Map<Phone, Long> cartItems;
     private BigDecimal cartPrice;
@@ -19,11 +19,11 @@ public class CartPageDTO implements Serializable {
         return deliveryPrice;
     }
 
-    public CartPageDTO(Map<Phone, Long> cartItems) {
+    public CartDTO(Map<Phone, Long> cartItems) {
         this.cartItems = cartItems;
     }
 
-    public CartPageDTO(Map<Phone, Long> cartItems, BigDecimal cartPrice) {
+    public CartDTO(Map<Phone, Long> cartItems, BigDecimal cartPrice) {
         this.cartItems = cartItems;
         this.cartPrice = cartPrice;
     }
@@ -56,6 +56,6 @@ public class CartPageDTO implements Serializable {
         this.totalPrice = totalPrice;
     }
 
-    public CartPageDTO() {
+    public CartDTO() {
     }
 }

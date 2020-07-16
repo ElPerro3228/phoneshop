@@ -2,7 +2,7 @@ package com.es.core.services;
 
 import com.es.core.cart.Cart;
 import com.es.core.cart.CartItem;
-import com.es.core.cart.CartPageDTO;
+import com.es.core.cart.CartDTO;
 import com.es.core.model.phone.Phone;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,7 @@ public class DefaultCartPageDataService implements CartPageDataService{
     private CartPriceCalculationService cartPriceCalculationService;
 
     @Override
-    public CartPageDTO createCartPageData(Cart cart) {
+    public CartDTO createCartPageData(Cart cart) {
         List<CartItem> cartItems = cart.getCartItems();
         Map<Phone, Long> itemsMap = new HashMap<>();
         for (CartItem cartItem : cartItems) {
@@ -29,12 +29,12 @@ public class DefaultCartPageDataService implements CartPageDataService{
         }
         BigDecimal cartPrice = cart.getCartPrice();
         BigDecimal deliveryPrice = cartPriceCalculationService.getDeliveryPrice();
-        CartPageDTO cartPageDTO = new CartPageDTO();
-        cartPageDTO.setCartItems(itemsMap);
-        cartPageDTO.setCartPrice(cartPrice);
-        cartPageDTO.setDeliveryPrice(deliveryPrice);
-        cartPageDTO.setTotalPrice(cartPrice.add(deliveryPrice));
-        return cartPageDTO;
+        CartDTO cartDTO = new CartDTO();
+        cartDTO.setCartItems(itemsMap);
+        cartDTO.setCartPrice(cartPrice);
+        cartDTO.setDeliveryPrice(deliveryPrice);
+        cartDTO.setTotalPrice(cartPrice.add(deliveryPrice));
+        return cartDTO;
     }
 
     @Override
