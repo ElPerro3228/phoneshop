@@ -17,6 +17,8 @@ public class DefaultCartPageDataService implements CartPageDataService{
 
     @Autowired
     private PhoneService phoneService;
+    @Autowired
+    private CartPriceCalculationService cartPriceCalculationService;
 
     @Override
     public CartPageDTO createCartPageData(Cart cart) {
@@ -26,7 +28,13 @@ public class DefaultCartPageDataService implements CartPageDataService{
             itemsMap.put(phoneService.getPhone(cartItem.getPhoneId()), cartItem.getQuantity());
         }
         BigDecimal cartPrice = cart.getCartPrice();
-        return new CartPageDTO(itemsMap, cartPrice);
+        BigDecimal deliveryPrice = cartPriceCalculationService.getDeliveryPrice();
+        CartPageDTO cartPageDTO = new CartPageDTO();
+        cartPageDTO.setCartItems(itemsMap);
+        cartPageDTO.setCartPrice(cartPrice);
+        cartPageDTO.setDeliveryPrice(deliveryPrice);
+        cartPageDTO.setTotalPrice(cartPrice.add(deliveryPrice));
+        return cartPageDTO;
     }
 
     @Override

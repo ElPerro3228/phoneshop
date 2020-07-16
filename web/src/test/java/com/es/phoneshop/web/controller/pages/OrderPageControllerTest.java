@@ -38,8 +38,6 @@ public class OrderPageControllerTest {
     @Mock
     private OrderItemsValidator orderItemsValidator;
     @Mock
-    private CartPriceCalculationService cartPriceCalculationService;
-    @Mock
     private CartPageDataService cartPageDataService;
     @InjectMocks
     private OrderPageController orderPageController;
@@ -62,7 +60,6 @@ public class OrderPageControllerTest {
 
     @Test
     public void testGetOrder() throws Exception {
-        when(cartPriceCalculationService.getDeliveryPrice()).thenReturn(new BigDecimal("5"));
         when(cartPageDataService.createCartPageData(any(Cart.class))).thenReturn(new CartPageDTO());
         mockMvc.perform(get("/order"))
                 .andExpect(view().name("order"))

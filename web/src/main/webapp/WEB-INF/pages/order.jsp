@@ -51,16 +51,16 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-4">
-                    Subtotal price: <fmt:formatNumber value="${subtotalPrice}" type="currency" currencySymbol="$"/>
-                    <sf:input path="subtotal" value="${subtotalPrice}" type="hidden"/>
+                    Subtotal price: <fmt:formatNumber value="${cartDTO.cartPrice}" type="currency" currencySymbol="$"/>
+                    <sf:input path="subtotal" value="${cartDTO.cartPrice}" type="hidden"/>
                 </div>
                 <div class="col-sm-4">
-                    Delivery price: <fmt:formatNumber value="${deliveryPrice}" type="currency" currencySymbol="$"/>
-                    <sf:input path="deliveryPrice" value="${deliveryPrice}" type="hidden"/>
+                    Delivery price: <fmt:formatNumber value="${cartDTO.deliveryPrice}" type="currency" currencySymbol="$"/>
+                    <sf:input path="deliveryPrice" value="${cartDTO.deliveryPrice}" type="hidden"/>
                 </div>
                 <div class="col-sm-4">
-                    Total price: <fmt:formatNumber value="${totalPrice}" type="currency" currencySymbol="$"/>
-                    <sf:input path="totalPrice" value="${totalPrice}" type="hidden"/>
+                    Total price: <fmt:formatNumber value="${cartDTO.totalPrice}" type="currency" currencySymbol="$"/>
+                    <sf:input path="totalPrice" value="${cartDTO.totalPrice}" type="hidden"/>
                 </div>
             </div>
             <div class="row">

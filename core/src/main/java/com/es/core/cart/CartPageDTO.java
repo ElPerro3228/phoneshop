@@ -12,8 +12,11 @@ public class CartPageDTO implements Serializable {
 
     private Map<Phone, Long> cartItems;
     private BigDecimal cartPrice;
+    private BigDecimal deliveryPrice;
+    private BigDecimal totalPrice;
 
-    public CartPageDTO() {
+    public BigDecimal getDeliveryPrice() {
+        return deliveryPrice;
     }
 
     public CartPageDTO(Map<Phone, Long> cartItems) {
@@ -39,5 +42,20 @@ public class CartPageDTO implements Serializable {
 
     public void setCartPrice(BigDecimal cartPrice) {
         this.cartPrice = cartPrice;
+    }
+
+    public void setDeliveryPrice(BigDecimal deliveryPrice) {
+        this.deliveryPrice = deliveryPrice;
+    }
+
+    public BigDecimal getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(BigDecimal totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public CartPageDTO() {
     }
 }
