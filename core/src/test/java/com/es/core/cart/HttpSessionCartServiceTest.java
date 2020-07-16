@@ -45,7 +45,8 @@ public class HttpSessionCartServiceTest {
     public void setup() {
         testPhone = new Phone();
         testPhone.setPrice(new BigDecimal("1"));
-        when(cartPriceCalculationService.calculateCartPrice(any(Cart.class))).thenReturn(new BigDecimal("2"));
+        when(cartPriceCalculationService.calculateCartPrice(eq(cart))).thenReturn(new BigDecimal("2"));
+        when(cartPriceCalculationService.getDeliveryPrice()).thenReturn(new BigDecimal("5"));
         when(quantityValidator.isValid(anyLong(), anyLong())).thenReturn(true);
     }
 

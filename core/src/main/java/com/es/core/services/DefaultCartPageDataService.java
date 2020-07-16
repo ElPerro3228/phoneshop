@@ -27,13 +27,11 @@ public class DefaultCartPageDataService implements CartPageDataService{
         for (CartItem cartItem : cartItems) {
             itemsMap.put(phoneService.getPhone(cartItem.getPhoneId()), cartItem.getQuantity());
         }
-        BigDecimal cartPrice = cart.getCartPrice();
-        BigDecimal deliveryPrice = cartPriceCalculationService.getDeliveryPrice();
         CartDTO cartDTO = new CartDTO();
         cartDTO.setCartItems(itemsMap);
-        cartDTO.setCartPrice(cartPrice);
-        cartDTO.setDeliveryPrice(deliveryPrice);
-        cartDTO.setTotalPrice(cartPrice.add(deliveryPrice));
+        cartDTO.setCartPrice(cart.getCartPrice());
+        cartDTO.setDeliveryPrice(cart.getDeliveryPrice());
+        cartDTO.setTotalPrice(cart.getTotalPrice());
         return cartDTO;
     }
 

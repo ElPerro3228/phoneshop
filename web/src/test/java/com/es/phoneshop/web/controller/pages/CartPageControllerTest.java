@@ -88,7 +88,7 @@ public class CartPageControllerTest {
 
         mockMvc.perform(get("/cart"))
                 .andExpect(view().name("cartPage"))
-                .andExpect(model().attributeExists("cartPageDTO"));
+                .andExpect(model().attributeExists("cartDTO"));
     }
 
     @Test

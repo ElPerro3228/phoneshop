@@ -8,6 +8,7 @@ import com.es.core.validators.QuantityValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -33,7 +34,7 @@ public class HttpSessionCartService implements CartService {
     @Override
     public void addPhone(Long phoneId, Long quantity) throws OutOfStockException {
         addOrUpdateCartItem(phoneId, quantity);
-        cart.setCartPrice(cartPriceCalculationService.calculateCartPrice(cart));
+        setPrices();
     }
 
     private Optional<CartItem> findCartItem(Long phoneId) {
@@ -51,13 +52,21 @@ public class HttpSessionCartService implements CartService {
                 remove(entry.getKey());
             }
         }
-        cart.setCartPrice(cartPriceCalculationService.calculateCartPrice(cart));
+        setPrices();
+    }
+
+    private void setPrices() {
+        BigDecimal cartPrice = cartPriceCalculationService.calculateCartPrice(cart);
+        BigDecimal deliveryPrice = cartPriceCalculationService.getDeliveryPrice();
+        cart.setCartPrice(cartPrice);
+        cart.setDeliveryPrice(deliveryPrice);
+        cart.setTotalPrice(cartPrice.add(deliveryPrice));
     }
 
     @Override
     public void remove(Long phoneId) {
         cart.getCartItems().removeIf(cartItem -> cartItem.getPhoneId().equals(phoneId));
-        cart.setCartPrice(cartPriceCalculationService.calculateCartPrice(cart));
+        setPrices();
     }
 
     private void addOrUpdateCartItem(Long phoneId, Long quantity) throws OutOfStockException {

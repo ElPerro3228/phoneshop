@@ -29,11 +29,10 @@ public class CartToOrderConverter implements Converter<Cart, Order> {
     @Override
     public Order convert(Cart cart) {
         Order order = new Order();
-        BigDecimal deliveryPrice = cartPriceCalculationService.getDeliveryPrice();
         order.setUuid(UUID.randomUUID());
         order.setSubtotal(cart.getCartPrice());
-        order.setDeliveryPrice(deliveryPrice);
-        order.setTotalPrice(cart.getCartPrice().add(deliveryPrice));
+        order.setDeliveryPrice(cart.getDeliveryPrice());
+        order.setTotalPrice(cart.getTotalPrice());
         List<OrderItem> orderItems = cart.getCartItems().stream()
                 .map(cartItem -> cartItemToOrderItemConverter.convert(cartItem))
                 .collect(Collectors.toList());
