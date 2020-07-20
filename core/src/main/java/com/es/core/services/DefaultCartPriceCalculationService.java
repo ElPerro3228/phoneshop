@@ -16,6 +16,15 @@ public class DefaultCartPriceCalculationService implements CartPriceCalculationS
     private PhoneDao phoneDao;
 
     @Override
+    public void setPrices(Cart cart) {
+        BigDecimal cartPrice = calculateCartPrice(cart);
+        BigDecimal deliveryPrice = getDeliveryPrice();
+        cart.setCartPrice(cartPrice);
+        cart.setDeliveryPrice(deliveryPrice);
+        cart.setTotalPrice(cartPrice.add(deliveryPrice));
+    }
+
+    @Override
     public BigDecimal calculateTotalPrice(Cart cart) {
         BigDecimal cartPrice = calculateCartPrice(cart);
         return cartPrice.add(deliveryPrice);

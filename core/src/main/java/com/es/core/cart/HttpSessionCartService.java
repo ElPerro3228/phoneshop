@@ -19,7 +19,7 @@ public class HttpSessionCartService implements CartService {
 
     @Autowired
     private Cart cart;
-    @Autowired
+
     private CartPriceCalculationService cartPriceCalculationService;
     @Autowired
     private QuantityValidator quantityValidator;
@@ -34,7 +34,7 @@ public class HttpSessionCartService implements CartService {
     @Override
     public void addPhone(Long phoneId, Long quantity) throws OutOfStockException {
         addOrUpdateCartItem(phoneId, quantity);
-        setPrices();
+        cartPriceCalculationService.setPrices(cart);
     }
 
     private Optional<CartItem> findCartItem(Long phoneId) {
@@ -52,21 +52,13 @@ public class HttpSessionCartService implements CartService {
                 remove(entry.getKey());
             }
         }
-        setPrices();
-    }
-
-    private void setPrices() {
-        BigDecimal cartPrice = cartPriceCalculationService.calculateCartPrice(cart);
-        BigDecimal deliveryPrice = cartPriceCalculationService.getDeliveryPrice();
-        cart.setCartPrice(cartPrice);
-        cart.setDeliveryPrice(deliveryPrice);
-        cart.setTotalPrice(cartPrice.add(deliveryPrice));
+        cartPriceCalculationService.setPrices(cart);
     }
 
     @Override
     public void remove(Long phoneId) {
         cart.getCartItems().removeIf(cartItem -> cartItem.getPhoneId().equals(phoneId));
-        setPrices();
+        cartPriceCalculationService.setPrices(cart);
     }
 
     private void addOrUpdateCartItem(Long phoneId, Long quantity) throws OutOfStockException {
@@ -95,6 +87,11 @@ public class HttpSessionCartService implements CartService {
 
     private void addNewItem(Long phoneId, Long quantity) {
         cart.getCartItems().add(new CartItem(phoneId, quantity));
+    }
+
+    @Autowired
+    public void setCartPriceCalculationService(CartPriceCalculationService cartPriceCalculationService) {
+        this.cartPriceCalculationService = cartPriceCalculationService;
     }
 }
 
