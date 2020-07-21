@@ -8,7 +8,7 @@ import com.es.core.validators.QuantityValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -19,7 +19,7 @@ public class HttpSessionCartService implements CartService {
 
     @Autowired
     private Cart cart;
-    @Autowired
+
     private CartPriceCalculationService cartPriceCalculationService;
     @Autowired
     private QuantityValidator quantityValidator;
@@ -34,7 +34,7 @@ public class HttpSessionCartService implements CartService {
     @Override
     public void addPhone(Long phoneId, Long quantity) throws OutOfStockException {
         addOrUpdateCartItem(phoneId, quantity);
-        cart.setCartPrice(cartPriceCalculationService.calculateCartPrice(cart));
+        cartPriceCalculationService.setPrices(cart);
     }
 
     private Optional<CartItem> findCartItem(Long phoneId) {
@@ -52,13 +52,13 @@ public class HttpSessionCartService implements CartService {
                 remove(entry.getKey());
             }
         }
-        cart.setCartPrice(cartPriceCalculationService.calculateCartPrice(cart));
+        cartPriceCalculationService.setPrices(cart);
     }
 
     @Override
     public void remove(Long phoneId) {
         cart.getCartItems().removeIf(cartItem -> cartItem.getPhoneId().equals(phoneId));
-        cart.setCartPrice(cartPriceCalculationService.calculateCartPrice(cart));
+        cartPriceCalculationService.setPrices(cart);
     }
 
     private void addOrUpdateCartItem(Long phoneId, Long quantity) throws OutOfStockException {
@@ -87,6 +87,11 @@ public class HttpSessionCartService implements CartService {
 
     private void addNewItem(Long phoneId, Long quantity) {
         cart.getCartItems().add(new CartItem(phoneId, quantity));
+    }
+
+    @Autowired
+    public void setCartPriceCalculationService(CartPriceCalculationService cartPriceCalculationService) {
+        this.cartPriceCalculationService = cartPriceCalculationService;
     }
 }
 

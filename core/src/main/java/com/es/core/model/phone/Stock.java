@@ -1,7 +1,7 @@
 package com.es.core.model.phone;
 
 public class Stock {
-    public Phone phone;
+    private Phone phone;
     private Integer stock;
     private Integer reserved;
 

@@ -1,28 +1,51 @@
 package com.es.core.model.order;
 
+import com.es.core.constraints.PhoneNumber;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.stereotype.Component;
+
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 public class Order
 {
+
     private Long id;
+    private UUID uuid;
     private List<OrderItem> orderItems;
     /**
      *  A sum of order item prices;
      */
+    @Positive
     private BigDecimal subtotal;
+    @Positive
     private BigDecimal deliveryPrice;
     /**
      * <code>subtotal</code> + <code>deliveryPrice</code>
      */
+    @Positive
     private BigDecimal totalPrice;
 
+    @Size(min = 2, message = "{validation.name}")
     private String firstName;
+    @Size(min = 2, message = "{validation.name}")
     private String lastName;
+    @Size(min = 2, message = "{validation.address}")
     private String deliveryAddress;
+    @PhoneNumber(message = "{validation.phoneNumber}")
     private String contactPhoneNo;
 
     private OrderStatus status;
+
+    public Order() {
+    }
 
     public Long getId() {
         return id;
@@ -38,6 +61,7 @@ public class Order
 
     public void setOrderItems(List<OrderItem> orderItems) {
         this.orderItems = orderItems;
+        orderItems.forEach(orderItem -> orderItem.setOrder(this));
     }
 
     public BigDecimal getSubtotal() {
@@ -102,6 +126,14 @@ public class Order
 
     public void setStatus(OrderStatus status) {
         this.status = status;
+    }
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
     }
 }
 

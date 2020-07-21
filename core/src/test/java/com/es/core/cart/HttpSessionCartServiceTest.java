@@ -3,6 +3,7 @@ package com.es.core.cart;
 import com.es.core.model.phone.Phone;
 import com.es.core.order.OutOfStockException;
 import com.es.core.services.CartPriceCalculationService;
+import com.es.core.services.DefaultCartPriceCalculationService;
 import com.es.core.services.PhoneService;
 import com.es.core.validators.QuantityValidator;
 import org.junit.Before;
@@ -12,6 +13,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
@@ -28,14 +30,14 @@ public class HttpSessionCartServiceTest {
 
     @Mock
     private Cart cart;
-    @Mock
-    private CartPriceCalculationService cartPriceCalculationService;
+    @Spy
+    private CartPriceCalculationService cartPriceCalculationService = new DefaultCartPriceCalculationService();
     @Mock
     private QuantityValidator quantityValidator;
     @Mock
     private PhoneService phoneService;
     @InjectMocks
-    private CartService cartService = new HttpSessionCartService();
+    private HttpSessionCartService cartService = new HttpSessionCartService();
     @Captor
     private ArgumentCaptor<BigDecimal> cartPriceCaptor;
 
@@ -45,7 +47,9 @@ public class HttpSessionCartServiceTest {
     public void setup() {
         testPhone = new Phone();
         testPhone.setPrice(new BigDecimal("1"));
-        when(cartPriceCalculationService.calculateCartPrice(any(Cart.class))).thenReturn(new BigDecimal("2"));
+        cartService.setCartPriceCalculationService(cartPriceCalculationService);
+        doReturn(new BigDecimal("2")).when(cartPriceCalculationService).calculateCartPrice(eq(cart));
+        doReturn(new BigDecimal("5")).when(cartPriceCalculationService).getDeliveryPrice();
         when(quantityValidator.isValid(anyLong(), anyLong())).thenReturn(true);
     }
 

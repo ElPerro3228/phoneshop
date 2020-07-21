@@ -17,6 +17,6 @@ public class QuantityValidator {
 
     public boolean isValid(Long phoneId, Long quantity) {
         Stock stock = stockDao.getStock(phoneId);
-        return quantity < stock.getStock();
+        return quantity <= stock.getStock();
     }
 }
