@@ -15,6 +15,7 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <org.springframework-version>4.3.10.RELEASE</org.springframework-version>
+    <org.spring-security-version>4.2.17.RELEASE</org.spring-security-version>
     <jackson.version>2.6.3</jackson.version>
     <logback.version>1.2.3</logback.version>
     <slf4j.version>1.7.26</slf4j.version>
@@ -130,6 +131,23 @@
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <version>${slf4j.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-bom</artifactId>
+      <version>${org.spring-security-version}</version>
+      <type>pom</type>
+      <scope>import</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-web</artifactId>
+      <version>${org.spring-security-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-config</artifactId>
+      <version>${org.spring-security-version}</version>
     </dependency>
   </dependencies>
 

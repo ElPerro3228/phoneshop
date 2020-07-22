@@ -19,7 +19,7 @@
         <header>
             <div class="container">
                 <div class="row">
-                    <div class="col-sm-8">
+                    <div class="col-sm-6">
                         <a href="<s:url value="/"/>">
                             <img style="size: 64px" src="<s:url value="/images/shoplogo.png"/>"/>
                         </a>
@@ -35,6 +35,17 @@
                                 <c:out value="items: ${miniCart.quantity}, price: "/> <fmt:formatNumber value="${miniCart.cartPrice}" type="currency" currencySymbol="$"/>
                             </c:if>
                         </p>
+                    </div>
+                    <div class="col-sm-2">
+                        <a href="<s:url value="/login"/>">
+                            login
+                        </a>
+                        <a href="<s:url value="/logout"/>">
+                            logout
+                        </a>
+                        <a href="<s:url value="/admin/orders"/>">
+                            admin
+                        </a>
                     </div>
                 </div>
             </div>

@@ -33,6 +33,16 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public List<Order> getOrders() {
+        return orderDao.getOrders();
+    }
+
+    @Override
+    public void updateOrder(Order order) {
+        orderDao.saveOrder(order);
+    }
+
+    @Override
     public Order updateOrderItems(Cart cart, Order order) {
         List<OrderItem> orderItems = cart.getCartItems().stream()
                 .map(cartItem -> cartItemToOrderItemConverter.convert(cartItem))

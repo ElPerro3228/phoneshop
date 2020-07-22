@@ -10,8 +10,10 @@ import java.util.UUID;
 public interface OrderService {
     Order createOrder(Cart cart);
     Order updateOrderItems(Cart cart, Order order);
+    void updateOrder(Order order);
     void placeOrder(Order order) throws OutOfStockException;
     Order getOrderByUUID(UUID uuid);
     Order getOrderById(Long id);
     List<OrderItem> getOrderItems(Long id);
+    List<Order> getOrders();
 }
