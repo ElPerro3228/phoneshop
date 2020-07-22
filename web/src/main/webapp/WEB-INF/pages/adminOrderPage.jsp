@@ -87,5 +87,6 @@
     <form method="post">
         <button type="submit" name="orderStatus" value="REJECTED">Rejected</button>
         <button type="submit" name="orderStatus" value="DELIVERED">Delivered</button>
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
     </form>
 </tags:master>

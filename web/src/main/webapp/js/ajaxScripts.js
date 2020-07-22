@@ -6,6 +6,12 @@ $("button[name='add-to-cart']").click(function(){
     cartItem["phoneId"] = phoneId;
     $this.siblings(".error").text("");
 
+    $.ajaxSetup({
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader(header, token);
+        }
+    });
+
     $.ajax({
         type : "POST",
         contentType : "application/json",
@@ -30,6 +36,12 @@ $("button[name='delete-from-cart']").click(function(){
     cartItem["quantity"] = $("#" + phoneId).val();
     cartItem["phoneId"] = phoneId;
     $this.siblings(".error").text("");
+
+    $.ajaxSetup({
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader(header, token);
+        }
+    });
 
     $.ajax({
         type : "DELETE",
