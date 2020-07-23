@@ -9,7 +9,7 @@
     </div>
     <div class="container">
         <div class="row">
-            <div class="col-sm-6">
+            <div id="status" class="col-sm-6">
                 Status: <c:out value="${order.status}"/>
             </div>
         </div>
@@ -84,9 +84,6 @@
     <a href="<c:url value="/admin/orders"/>">
         <button name="adminOrdersPage" type="button" class="btn btn-outline-success">Back</button>
     </a>
-    <form method="post">
-        <button type="submit" name="orderStatus" value="REJECTED">Rejected</button>
-        <button type="submit" name="orderStatus" value="DELIVERED">Delivered</button>
-        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-    </form>
+    <button name="order-status" type="button" name="orderStatus" value="REJECTED" >Rejected</button>
+    <button name="order-status" type="button" name="orderStatus" value="DELIVERED" >Delivered</button>
 </tags:master>

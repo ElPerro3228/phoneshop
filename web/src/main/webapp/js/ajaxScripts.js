@@ -97,3 +97,24 @@ $("button[name='update-cart']").click(function(){
         }
     });
 });
+
+$("button[name='order-status']").click(function(){
+    var status = $(this).val();
+
+    $.ajaxSetup({
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader(header, token);
+        }
+    });
+
+    $.ajax({
+        type : "PUT",
+        contentType : "application/json",
+        url : window.location.href,
+        data : JSON.stringify(status),
+        dataType : 'json',
+        success : function(data) {
+            $("#status").text(data.status);
+        }
+    });
+});
