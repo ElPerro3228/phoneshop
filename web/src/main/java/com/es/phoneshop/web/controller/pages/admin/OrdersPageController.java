@@ -33,10 +33,8 @@ public class OrdersPageController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.POST)
     public String updateOrder(@PathVariable("id") Long id, @RequestParam(name = "orderStatus", defaultValue = "DELIVERED") OrderStatus orderStatus, Model model) throws OutOfStockException {
-        Order order = orderService.getOrderById(id);
-        order.setStatus(orderStatus);
-        orderService.updateOrder(order);
-        model.addAttribute("order", order);
+        orderService.updateStatus(id, orderStatus);
+        model.addAttribute("order", orderService.getOrderById(id));
         return "adminOrderPage";
     }
 }
