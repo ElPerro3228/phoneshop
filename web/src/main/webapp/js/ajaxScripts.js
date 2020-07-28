@@ -112,9 +112,8 @@ $("button[name='order-status']").click(function(){
         contentType : "application/json",
         url : window.location.href,
         data : JSON.stringify(status),
-        dataType : 'json',
         success : function(data) {
-            $("#status").text(data.status);
+            $("#status").text("Status: " + status);
         }
     });
 });

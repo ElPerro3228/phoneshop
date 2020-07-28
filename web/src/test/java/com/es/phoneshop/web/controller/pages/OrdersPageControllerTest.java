@@ -3,15 +3,13 @@ package com.es.phoneshop.web.controller.pages;
 import com.es.core.model.order.Order;
 import com.es.core.model.order.OrderStatus;
 import com.es.core.order.OrderDao;
-import com.es.phoneshop.web.controller.IntegrationTest;
+import com.es.phoneshop.web.controller.AbstractWebAppIntegrationTest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.web.FilterChainProxy;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -28,9 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@IntegrationTest
-public class OrdersPageControllerTest {
+public class OrdersPageControllerTest extends AbstractWebAppIntegrationTest {
 
     @Autowired
     private WebApplicationContext context;
@@ -84,7 +80,7 @@ public class OrdersPageControllerTest {
                 .content(orderStatus)
                 .with(csrf())
                 .with(user("mkyong").password("123456").roles("USER")))
-                .andExpect(jsonPath("$.status", is("DELIVERED")));
+                .andExpect(status().isOk());
         Order updatedOrder = orderDao.getOrderById(1L).get();
         assertThat(updatedOrder.getStatus()).isEqualTo(OrderStatus.DELIVERED);
     }

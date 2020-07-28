@@ -40,10 +40,8 @@ public class OrdersPageController {
 
     @ResponseBody
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Map<String, String>> updateOrder(@PathVariable("id") Long id, @RequestBody OrderStatus orderStatus) throws OutOfStockException {
+    public ResponseEntity updateOrder(@PathVariable("id") Long id, @RequestBody OrderStatus orderStatus) throws OutOfStockException {
         orderService.updateStatus(id, orderStatus);
-        Map<String, String> map = new HashMap<>();
-        map.put("status", orderService.getOrderById(id).getStatus().toString());
-        return new ResponseEntity<>(map, HttpStatus.OK);
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

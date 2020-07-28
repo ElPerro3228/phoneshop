@@ -5,6 +5,7 @@
 
     <import resource="classpath:context/applicationContext-core.xml"/>
     <import resource="classpath:context/applicationContext-demoda.xml"/>
+    <import resource="file:src/main/webapp/WEB-INF/spring-security.xml"/>
 
 
     <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
