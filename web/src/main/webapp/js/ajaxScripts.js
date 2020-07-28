@@ -6,6 +6,12 @@ $("button[name='add-to-cart']").click(function(){
     cartItem["phoneId"] = phoneId;
     $this.siblings(".error").text("");
 
+    $.ajaxSetup({
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader(header, token);
+        }
+    });
+
     $.ajax({
         type : "POST",
         contentType : "application/json",
@@ -30,6 +36,12 @@ $("button[name='delete-from-cart']").click(function(){
     cartItem["quantity"] = $("#" + phoneId).val();
     cartItem["phoneId"] = phoneId;
     $this.siblings(".error").text("");
+
+    $.ajaxSetup({
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader(header, token);
+        }
+    });
 
     $.ajax({
         type : "DELETE",
@@ -82,6 +94,26 @@ $("button[name='update-cart']").click(function(){
             $.each(e, function(key, value) {
                 $("#" + key).siblings(".error").text(value);
             });
+        }
+    });
+});
+
+$("button[name='order-status']").click(function(){
+    var status = $(this).val();
+
+    $.ajaxSetup({
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader(header, token);
+        }
+    });
+
+    $.ajax({
+        type : "PUT",
+        contentType : "application/json",
+        url : window.location.href,
+        data : JSON.stringify(status),
+        success : function(data) {
+            $("#status").text("Status: " + status);
         }
     });
 });

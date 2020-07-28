@@ -47,6 +47,8 @@ public class JdbcOrderDao implements OrderDao{
     private static final String UPDATE_ORDER_ITEM = "update orderItems set " +
             "phoneId = :phoneId, orderId = :orderId, quantity = :quantity where id = :id;";
 
+    private static final String SELECT_ORDERS = "select * from orders order by id;";
+
     @Override
     public void saveOrder(Order order) {
         if (order.getId() == null) {
@@ -54,6 +56,11 @@ public class JdbcOrderDao implements OrderDao{
         } else {
             updateOrder(order);
         }
+    }
+
+    @Override
+    public List<Order> getOrders() {
+        return jdbcTemplate.query(SELECT_ORDERS, orderRowMapper);
     }
 
     private void insertOrder(Order order) {

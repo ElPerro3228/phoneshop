@@ -25,6 +25,7 @@
     </div>
     <sf:form method="post" modelAttribute="cartDTO">
     <sf:input path="cartPrice" value="${cartDTO.cartPrice}" type="hidden"/>
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
     <table border="1px" class="table">
         <thead>
         <tr>

@@ -5,6 +5,7 @@ import com.es.core.converters.CartItemToOrderItemConverter;
 import com.es.core.converters.CartToOrderConverter;
 import com.es.core.model.order.Order;
 import com.es.core.model.order.OrderItem;
+import com.es.core.model.order.OrderStatus;
 import com.es.core.services.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,18 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order createOrder(Cart cart) {
         return cartToOrderConverter.convert(cart);
+    }
+
+    @Override
+    public List<Order> getOrders() {
+        return orderDao.getOrders();
+    }
+
+    @Override
+    public void updateStatus(Long orderId, OrderStatus orderStatus) {
+        Order order = getOrderById(orderId);
+        order.setStatus(orderStatus);
+        orderDao.saveOrder(order);
     }
 
     @Override
