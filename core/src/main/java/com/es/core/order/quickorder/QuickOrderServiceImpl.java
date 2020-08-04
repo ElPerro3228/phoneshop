@@ -2,8 +2,6 @@ package com.es.core.order.quickorder;
 
 import com.es.core.cart.CartItem;
 import com.es.core.cart.CartService;
-import com.es.core.model.order.OrderItem;
-import com.es.core.order.OrderService;
 import com.es.core.order.OutOfStockException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,12 +32,23 @@ public class QuickOrderServiceImpl implements QuickOrderService {
     public void addItemsToCart(QuickOrder quickOrder, Errors errors) throws OutOfStockException {
         int index = 0;
         for (CartItem cartItem : quickOrder.getOrderItems()) {
-            if ((errors.getFieldError("orderItems[" + index + "].phoneId") == null) && (errors.getFieldError("orderItems[" + index + "].quantity") == null)) {
+            if (!doesNotHasFieldError(errors, index) && (doesNotEmpty(cartItem))) {
                 cartService.addPhone(cartItem.getPhoneId(), cartItem.getQuantity());
                 cartItem.setQuantity(0L);
                 cartItem.setPhoneId(0L);
             }
             index++;
         }
+    }
+
+    private boolean doesNotEmpty(CartItem cartItem) {
+        if ((cartItem.getPhoneId() == null) || (cartItem.getQuantity() == null)) {
+            return false;
+        }
+        return true;
+    }
+
+    private boolean doesNotHasFieldError(Errors errors, int index) {
+        return (errors.getFieldError("orderItems[" + index + "].phoneId") == null) && (errors.getFieldError("orderItems[" + index + "].quantity") == null);
     }
 }

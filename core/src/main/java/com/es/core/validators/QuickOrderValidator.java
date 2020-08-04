@@ -31,22 +31,49 @@ public class QuickOrderValidator implements Validator {
         List<CartItem> orderItems = quickOrder.getOrderItems();
         int index = 0;
         for (CartItem orderItem : orderItems) {
-            if (orderItem.getPhoneId() < 0) {
-                errors.rejectValue("orderItems[" + index + "].phoneId", "validation.cartpage.quantity", "Must be more or equal to 0");
+            if ((orderItem.getPhoneId() == null) && (orderItem.getQuantity() == null)) {
+                continue;
             }
-            Optional<Phone> phone = phoneDao.get(orderItem.getPhoneId());
-            if (!phone.isPresent()) {
-                errors.rejectValue("orderItems[" + index + "].phoneId", "validation.cartpage.null", "not exist");
+            if (orderItem.getPhoneId() == null) {
+                orderItem.setPhoneId(-1L);
             }
-            if (phone.isPresent()) {
-                if (phone.get().getPrice() == null) {
-                    errors.rejectValue("orderItems[" + index + "].phoneId", "validation.cartpage.null", "not exist");
-                }
-            }
-            if (!quantityValidator.isValid(orderItem.getPhoneId(), orderItem.getQuantity())) {
-                errors.rejectValue("orderItems[" + index + "].quantity", "validation.outOfStock", "Out of stock");
-            }
+            validatePhoneId(errors, index, orderItem);
+            validateQuantity(errors, index, orderItem);
             index++;
         }
+    }
+
+    private void validateQuantity(Errors errors, int index, CartItem orderItem) {
+        if (!alreadyHasQuantityError(errors, index)) {
+            if (isValidQuantity(orderItem)) {
+                errors.rejectValue("orderItems[" + index + "].quantity", "validation.outOfStock", "Out of stock");
+            }
+        }
+    }
+
+    private void validatePhoneId(Errors errors, int index, CartItem orderItem) {
+        if (orderItem.getPhoneId() < 0) {
+            errors.rejectValue("orderItems[" + index + "].phoneId", "validation.cartpage.quantity", "Must be more or equal to 0");
+        }
+        Optional<Phone> phone = phoneDao.get(orderItem.getPhoneId());
+        if (!phone.isPresent()) {
+            errors.rejectValue("orderItems[" + index + "].phoneId", "validation.cartpage.null", "not exist");
+        }
+        if (phone.isPresent()) {
+            if (phone.get().getPrice() == null) {
+                errors.rejectValue("orderItems[" + index + "].phoneId", "validation.cartpage.null", "not exist");
+            }
+        }
+    }
+
+    private boolean alreadyHasQuantityError(Errors errors, int index) {
+        if (errors.getFieldError("orderItems[" + index + "].quantity") != null) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isValidQuantity(CartItem orderItem) {
+        return !quantityValidator.isValid(orderItem.getPhoneId(), orderItem.getQuantity());
     }
 }

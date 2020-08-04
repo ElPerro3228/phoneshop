@@ -1,7 +1,6 @@
 package com.es.core.order.quickorder;
 
 import com.es.core.cart.CartItem;
-import com.es.core.model.order.OrderItem;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.validation.Valid;
+
 @Controller
 @RequestMapping(value = "/quickOrder")
 public class QuickOrderController {
@@ -28,7 +30,7 @@ public class QuickOrderController {
     }
 
     @PostMapping
-    public String postQuickOrder(@ModelAttribute QuickOrder quickOrder, Model model, Errors errors) throws OutOfStockException {
+    public String postQuickOrder(@ModelAttribute @Valid QuickOrder quickOrder, Errors errors) throws OutOfStockException {
         quickOrderValidator.validate(quickOrder, errors);
         quickOrderService.addItemsToCart(quickOrder, errors);
         return "quickOrderPage";

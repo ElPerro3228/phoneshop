@@ -4,13 +4,16 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.io.Serializable;
 
 public class CartItem implements Serializable {
 
+    @NotNull
     @Positive
     private Long phoneId;
+    @NotNull
     @DecimalMin(value = "1", message = "{validation.moreThanOne}")
     private Long quantity;
 
