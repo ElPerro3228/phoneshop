@@ -36,6 +36,8 @@ public class QuickOrderServiceImpl implements QuickOrderService {
         for (CartItem cartItem : quickOrder.getOrderItems()) {
             if ((errors.getFieldError("orderItems[" + index + "].phoneId") == null) && (errors.getFieldError("orderItems[" + index + "].quantity") == null)) {
                 cartService.addPhone(cartItem.getPhoneId(), cartItem.getQuantity());
+                cartItem.setQuantity(0L);
+                cartItem.setPhoneId(0L);
             }
             index++;
         }

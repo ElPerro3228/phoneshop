@@ -11,11 +11,11 @@
             <c:forEach var="orderItem" items="${quickOrder.orderItems}" varStatus="status">
                 <div class="row">
                     <div class="column-sm-6">
-                        <sf:input path="orderItems[${status.index}].phoneId" value="1001"/>
+                        <sf:input path="orderItems[${status.index}].phoneId" value="${orderItem.phoneId}"/>
                         <sf:errors path="orderItems[${status.index}].phoneId" cssClass="error" cssStyle="color: red"/>
                     </div>
                     <div class="column-sm-6">
-                        <sf:input path="orderItems[${status.index}].quantity" value="1"/>
+                        <sf:input path="orderItems[${status.index}].quantity" value="${orderItem.quantity}"/>
                         <sf:errors path="orderItems[${status.index}].quantity" cssClass="error" cssStyle="color: red"/>
                     </div>
                 </div>
