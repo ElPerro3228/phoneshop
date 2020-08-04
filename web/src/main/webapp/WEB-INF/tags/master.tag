@@ -52,6 +52,9 @@
                         <a href="<c:url value="/login"/>">
                             login
                         </a>
+                        <a href="<c:url value="/quickOrder"/>">
+                            quickorder
+                        </a>
                         <a href="javascript:formSubmit()">logout</a>
                         <a href="<s:url value="/admin/orders"/>">
                             admin
